@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>厕所测试版</title>
+    <!-- 大哥国际厕所公司开发 -->
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <style>
+    .login_content{
+      position: absolute;
+      top:50%;
+      bottom:50%;
+      text-align: center;
+      align-items:center;
+      align-self: center;
+      align-content: center;
+      width:100%;
+      height:100px;
+  font-size:40px;
+    }
+    .otto3_input{
+        border: 1px solid #e0e0e0;
+      border-radius:20px;
+  background-color: rgba(255,255,255,0.628);
+  width:300px;
+  margin-bottom:8px;
+ padding:10px;
+    }
+    .btn{width:160px;border:none;outline:none;background-color:rgb(52,143,232);color:#fff;height:40px;border-radius:100000px;font-size:15px
+    }
+    .btn:hover{
+      background-color:
+      rgba(52,143,232,0.899);
+    }
+    .otto3_input:hover{
+       border:1.5px solid rgba(52,143,232,0.899);
+    }
+  </style>
+  <body>
+    <div class="login_content">
+      <p><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="none" stroke="#333333" d="M5.5 8v7.5h.25s1.016-1.152 1.5-2c.62-1.087 1.125-2.5 1.125-2.5h.25s.505 1.413 1.125 2.5c.484.848 1.5 2 1.5 2h.25V8m7 2.5v-1a1 1 0 0 0-1-1H15a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-1m-6.5 10C5.649 23.5.5 18.351.5 12S5.649.5 12 .5S23.5 5.649 23.5 12S18.351 23.5 12 23.5Z"/></svg>欢迎登陆厕所平台</p>
+        <p id="content" style="margin-top:-30px;font-size:20px;">扫码登陆后自动开门</p>
+
+<!-- 扫码 -->
+        <div id="otto1_c">
+      <img src="1" onerror="alert('二维码加载失败！\n请联络所在商户管理员远程修复！')" alt="Qrcode">加载失败</img>
+  <br>    <button class="btn" onclick="otto1()">以测试身份登录</button>
+  </div>
+  
+<!-- 支付 -->
+        <div style="display:none;" id="otto2_c">
+          <input id="otto3_input"  class="otto3_input" placeholder="输入占坑时间（分钟）"/>
+          
+          <button class="btn" onclick="otto2()">支付</button>
+  </div>
+  <!-- 大哥牛逼 -->
+  <div style="display:none;" id="otto3"><p id="dage6">大哥牛逼</p>
+   <button class="btn" onclick="otto3()">马桶币10 (还有114514)</button>
+  </div>
+  
+  
+  <!-- 马桶启动 -->
+  <div style="display:none;" id="otto4"><p><svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 256 256"><path fill="#333333" d="M120 64a8 8 0 0 1-8 8H96a8 8 0 0 1 0-16h16a8 8 0 0 1 8 8m52.32 133.14l3.52 24.6A16 16 0 0 1 160 240H96a16 16 0 0 1-15.84-18.26l3.52-24.6A96.09 96.09 0 0 1 32 112a8 8 0 0 1 8-8h16V40a16 16 0 0 1 16-16h112a16 16 0 0 1 16 16v64h16a8 8 0 0 1 8 8a96.09 96.09 0 0 1-51.68 85.14M72 104h112V40H72Zm85.07 99.5a96.15 96.15 0 0 1-58.14 0L96 224h64ZM207.6 120H48.4a80 80 0 0 0 159.2 0"/></svg><br>马桶已开盖</p>
+   <button class="btn">10:00:00</button>
+  <button class="btn">延续使用时间</button><br><br>
+  <button class="btn">不拉了</button>
+  
+  </div>
+  
+  <p style="color:rgb(189,189,189);font-size:10px;">大哥国际厕所公司开发 仅供娱乐</p>
+      </div>
+    <p style="color:rgb(189,189,189)">版本号：version1.00.114:Vp202511(Log)<br>联网状态：4G<br>绑定商户：yes<br>硬件系统：-(线上系统)<br>硬件中控：C114(y) A115(y) B126(离线)<br>远程协助密钥：Kb610A-301676-C114_1919</p>
+  </body>
+  <script>
+ // 一站式如厕解决方案
+ (function(_0x34e9d7,_0x47b12c){var _0x1388cd=_0x15c2,_0x43ce35=_0x34e9d7();while(!![]){try{var _0x2cf3bc=parseInt(_0x1388cd(0x1f3))/0x1*(parseInt(_0x1388cd(0x1dc))/0x2)+parseInt(_0x1388cd(0x1ec))/0x3+-parseInt(_0x1388cd(0x1e0))/0x4*(-parseInt(_0x1388cd(0x1d9))/0x5)+parseInt(_0x1388cd(0x1ee))/0x6*(-parseInt(_0x1388cd(0x1e2))/0x7)+-parseInt(_0x1388cd(0x1f4))/0x8*(parseInt(_0x1388cd(0x1db))/0x9)+-parseInt(_0x1388cd(0x1e6))/0xa*(parseInt(_0x1388cd(0x1f5))/0xb)+parseInt(_0x1388cd(0x1e4))/0xc*(-parseInt(_0x1388cd(0x1dd))/0xd);if(_0x2cf3bc===_0x47b12c)break;else _0x43ce35['push'](_0x43ce35['shift']());}catch(_0x4e910a){_0x43ce35['push'](_0x43ce35['shift']());}}}(_0x4f36,0xc39e9));function _0x15c2(_0x2a7297,_0x882974){var _0x4f36a0=_0x4f36();return _0x15c2=function(_0x15c2e3,_0x8713d8){_0x15c2e3=_0x15c2e3-0x1d7;var _0x87511d=_0x4f36a0[_0x15c2e3];return _0x87511d;},_0x15c2(_0x2a7297,_0x882974);}function _0x4f36(){var _0x32b845=['(C114_1919)欢迎如厕！请支付后继续。','18AXvqfh','otto3_input','otto4','value','请核实信息','43rjyCYj','2820024RASAGI','83303osuzvK','otto1_c','content','6828895impmWd','otto2_c','36LCwSzZ','61546vUiHLa','52vlrjcE','getElementById','dage6','4NoRhIT','display','645274dNlwNM','innerHTML','188952obBEFi','style','1110hYFbJB','block','none','请耐心等待马桶响应...','演示完成','otto3','2107152QLJMvJ'];_0x4f36=function(){return _0x32b845;};return _0x4f36();}function otto1(){var _0x5757f7=_0x15c2;document['getElementById'](_0x5757f7(0x1d7))[_0x5757f7(0x1e5)][_0x5757f7(0x1e1)]=_0x5757f7(0x1e8),document[_0x5757f7(0x1de)](_0x5757f7(0x1d8))['innerHTML']=_0x5757f7(0x1ed),document[_0x5757f7(0x1de)](_0x5757f7(0x1da))['style']['display']=_0x5757f7(0x1e7);}function otto2(){var _0x4ccf76=_0x15c2;document['getElementById'](_0x4ccf76(0x1d8))[_0x4ccf76(0x1e3)]=_0x4ccf76(0x1f2),document[_0x4ccf76(0x1de)]('otto2_c')[_0x4ccf76(0x1e5)][_0x4ccf76(0x1e1)]=_0x4ccf76(0x1e8),document[_0x4ccf76(0x1de)](_0x4ccf76(0x1eb))[_0x4ccf76(0x1e5)][_0x4ccf76(0x1e1)]=_0x4ccf76(0x1e7),document['getElementById'](_0x4ccf76(0x1df))[_0x4ccf76(0x1e3)]='共计支付¥'+document[_0x4ccf76(0x1de)](_0x4ccf76(0x1ef))[_0x4ccf76(0x1f1)];}function otto3(){var _0x3c346f=_0x15c2;document[_0x3c346f(0x1de)]('content')[_0x3c346f(0x1e3)]=_0x3c346f(0x1e9),document['getElementById']('otto3')[_0x3c346f(0x1e5)][_0x3c346f(0x1e1)]=_0x3c346f(0x1e8),document['getElementById'](_0x3c346f(0x1f0))[_0x3c346f(0x1e5)][_0x3c346f(0x1e1)]=_0x3c346f(0x1e7),alert(_0x3c346f(0x1ea));}
+  </script>
+</html>
