@@ -7,7 +7,7 @@
 <br>执行 sh main.sh
 <br>显示伪登录页面。
 <br>
-> txt
+```txt
 欢迎使用厕所收费服务
 大哥国际厕所公司开发 仅供娱乐 请勿当真
 Linux localhost
@@ -16,6 +16,7 @@ Linux localhost
 请扫码登录
 二维码：加载失败
 模拟登录请输入：LocalLogin
+```
 <br>
 <img alt="Static Badge" src="https://img.shields.io/badge/仅作娱乐，请勿当真！-3">
 ### 该程序不能够实现厕所收费功能，仅供娱乐，请勿当真。
