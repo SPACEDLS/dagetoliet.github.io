@@ -1,81 +1,89 @@
 <!doctype html>
 <html>
 <head>
-<!-- 大哥牛逼 -->
   <meta charset="UTF-8">
   <title>系统登录</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            clifford: '#da373d',
-          }
-        }
-      }
-    }
-  </script>
+  <!-- 引入 layui.css -->
+<link href="//unpkg.com/layui@2.13.2/dist/css/layui.css" rel="stylesheet">
+<!-- 引入 layui.js -->
+<script src="//unpkg.com/layui@2.13.2/dist/layui.js"></script>
 </head>
 <body>
-    <div class="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
-  <div aria-hidden="true" class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl">
-    <div style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)" class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"></div>
-  </div>
-  <div aria-hidden="true" class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl">
-    <div style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)" class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"></div>
-  </div>
-  <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-    <p class="text-sm/6 text-gray-900">
-      <strong class="font-semibold">大哥国际厕所公司</strong><svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"><circle r="1" cx="1" cy="1" /></svg>AUTH
-    </p>
-  </div>
-</div>
-
-<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight">🆔身份验证登录</h2>
-  </div>
-
-  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form class="space-y-6">
-      <div>
-        <label for="email" class="block text-sm/6 font-medium ">邮箱地址</label>
-        <div class="mt-2">
-          <input id="email" type="email" name="email" required autocomplete="email" style="border:1.5px solid 
-
-
-#f4f4f4;color:#000;" class="block w-full rounded-md px-3 py-1.5 text-base  sm:text-sm/6" />
+<style>
+.demo-login-container{width: 320px; margin: 21px auto 0;}
+.demo-login-other .layui-icon{position: relative; display: inline-block; margin: 0 2px; top: 2px; font-size: 26px;}
+</style>
+<form class="layui-form">
+  <div class="demo-login-container">
+    <div class="layui-form-item">
+      <h1 style="text-align:center">大哥国际厕所公司</h1>
+ 
+      <div class="layui-input-wrap">
+        <div class="layui-input-prefix">
+          <i class="layui-icon layui-icon-username"></i>
         </div>
+        <input type="text" name="username" value="" lay-verify="required" placeholder="成员ID" lay-reqtext="请填写成员ID" autocomplete="off" class="layui-input" lay-affix="clear">
       </div>
-
-      <div>
-        <div class="flex items-center justify-between">
-          <label for="password" class="block text-sm/6 font-medium ">密码</label>
-          <div class="text-sm">
-            <a 
-    style="color:#4da7fc" href="#" class="font-semibold text-indigo-400 hover:text-indigo-300">PoweredbyToliet</a>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-wrap">
+        <div class="layui-input-prefix">
+          <i class="layui-icon layui-icon-password"></i>
+        </div>
+        <input type="password" name="password" value="" lay-verify="required" placeholder="密   码" lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-row">
+        <div class="layui-col-xs7">
+          <div class="layui-input-wrap">
+            <div class="layui-input-prefix">
+              <i class="layui-icon layui-icon-vercode"></i>
+            </div>
+            <input type="text" name="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码" autocomplete="off" class="layui-input" lay-affix="clear">
           </div>
         </div>
-        <div class="mt-2">
-          <input id="password" style="border:1.5px solid #f4f4f4;color:#000;"  type="password" name="password" required autocomplete="current-password"  class="block w-full rounded-md px-3 py-1.5 text-base  sm:text-sm/6" />
+        <div class="layui-col-xs5">
+          <div style="margin-left: 10px;">
+            <img src="https://www.oschina.net/action/user/captcha" onclick="this.src='https://www.oschina.net/action/user/captcha?t='+ new Date().getTime();">
+          </div>
         </div>
       </div>
-
-      <div>
-        <button style="background-color:#4da7fc" onclick="login()" class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">登录</button>
-      </div>
-    </form>
-
-    <p class="mt-10 text-center text-sm/6 text-gray-400">
-      请勿当真
-      
-    </p>
+    </div>
+    <div class="layui-form-item">
+      <input type="checkbox" name="remember" lay-skin="primary" title="记住密码">
+    </div>
+    <div class="layui-form-item">
+      <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login">登录</button>
+    </div>
+    <div class="layui-form-item demo-login-other">
+      <label>其他方式</label>
+      <span style="padding: 0 21px 0 6px;">
+        <a href="javascript:;"><i class="layui-icon layui-icon-login-qq" style="color: #3492ed;"></i></a>
+        <a href="javascript:;"><i class="layui-icon layui-icon-login-wechat" style="color: #4daf29;"></i></a>
+        <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo" style="color: #cf1900;"></i></a>
+      </span>
+      注册账户需申请
+    </div>
   </div>
-</div>
-</body>
+</form>
+  </body>
 <script>
-  function _0x2f88(){var _0x12343d=['75549uVXlCM','1757838SzZdCv','登录失败gmtag66666','7kTRyrW','1142040gTzroG','1570rpbNLw','136905DImctw','79417VvXpeZ','121210USVira','13887KwGqiX','4qMxtQs'];_0x2f88=function(){return _0x12343d;};return _0x2f88();}function _0x52b0(_0x47ee2e,_0x4f69c0){var _0x2f88fd=_0x2f88();return _0x52b0=function(_0x52b02d,_0x10ac3f){_0x52b02d=_0x52b02d-0x19f;var _0x13e153=_0x2f88fd[_0x52b02d];return _0x13e153;},_0x52b0(_0x47ee2e,_0x4f69c0);}(function(_0x548539,_0x54c001){var _0x49e3f3=_0x52b0,_0x4bb5a3=_0x548539();while(!![]){try{var _0xeb5307=parseInt(_0x49e3f3(0x1a2))/0x1+parseInt(_0x49e3f3(0x1a3))/0x2+parseInt(_0x49e3f3(0x1a6))/0x3*(-parseInt(_0x49e3f3(0x1a5))/0x4)+-parseInt(_0x49e3f3(0x1a1))/0x5+-parseInt(_0x49e3f3(0x1a7))/0x6*(parseInt(_0x49e3f3(0x1a9))/0x7)+parseInt(_0x49e3f3(0x19f))/0x8+parseInt(_0x49e3f3(0x1a4))/0x9*(parseInt(_0x49e3f3(0x1a0))/0xa);if(_0xeb5307===_0x54c001)break;else _0x4bb5a3['push'](_0x4bb5a3['shift']());}catch(_0x30aa16){_0x4bb5a3['push'](_0x4bb5a3['shift']());}}}(_0x2f88,0x2bd23));function login(){var _0x46c729=_0x52b0;alert(_0x46c729(0x1a8));}
+layui.use(function(){
+  var form = layui.form;
+  var layer = layui.layer;
+  // 提交
+  form.on('submit(demo-login)', function(data){
+    var field = data.field;
+    layer.alert(JSON.stringify(field), {
+      title: '登录失败',
+      content:'系统检测到您并非我司成员，无权进入系统。'
+    });
+    // 此处可执行 Ajax 等操作
+    // …
+    return false;
+  });
+});
 </script>
 </html>
