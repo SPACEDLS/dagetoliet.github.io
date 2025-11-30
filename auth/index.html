@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Author</title>
+    <!-- 大哥国际厕所公司开发 -->
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <style>/* From Uiverse.io by andrew-demchenk0 */ 
+.error {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  width: 320px;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  background: #EF665B;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px -3px #111;
+}
+
+.error__icon {
+  width: 20px;
+  height: 20px;
+  transform: translateY(-2px);
+  margin-right: 8px;
+}
+
+.error__icon path {
+  fill: #fff;
+}
+
+.error__title {
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+}
+
+.error__close {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.error__close path {
+  fill: #fff;
+}
+    .login_content{
+      position: absolute;
+      top:50%;
+      bottom:50%;
+      text-align: center;
+      align-items:center;
+      align-self: center;
+      align-content: center;
+      width:100%;
+      height:100px;
+  font-size:40px;
+    }
+    .otto3_input{
+        border: 1px solid #e0e0e0;
+      border-radius:20px;
+  background-color: rgba(255,255,255,0.628);
+  width:300px;
+  margin-bottom:8px;
+ padding:10px;
+    }
+    .btn{width:160px;border:none;outline:none;background-color:rgb(52,143,232);color:#fff;height:40px;border-radius:100000px;font-size:15px
+    }
+    .btn:hover{
+      background-color:
+      rgba(52,143,232,0.899);
+    }
+    .otto3_input:hover{
+       border:1.5px solid rgba(52,143,232,0.899);
+    }
+  </style>
+  <body>
+    <div class="login_content">
+      <p style="margin:0;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" viewBox="0 0 24 24"><path fill="none" stroke="#333333" d="M5.5 8v7.5h.25s1.016-1.152 1.5-2c.62-1.087 1.125-2.5 1.125-2.5h.25s.505 1.413 1.125 2.5c.484.848 1.5 2 1.5 2h.25V8m7 2.5v-1a1 1 0 0 0-1-1H15a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-1m-6.5 10C5.649 23.5.5 18.351.5 12S5.649.5 12 .5S23.5 5.649 23.5 12S18.351 23.5 12 23.5Z"/></svg>Author</p>
+
+<div class="error">
+    <div class="error__icon">
+    </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
+    <div class="error__title">Token 无效。</div>
+    <div class="error__close"><svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20"><path fill="#393a37" d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z"></path></svg></div>
+</div>
+  </body>
+  <script>
+    // Author
+    function getQueryString(name) {
+   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+   var r = window.location.search.substr(1).match(reg);
+   if (r != null) return unescape(r[2]);
+   return null;
+}
+// getElement
+alert(getQueryString("g2") || "无授权信息，登录无效");
+    </script>
+</html>
