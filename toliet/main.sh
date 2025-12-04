@@ -4,8 +4,8 @@
 clear
 
 # 显示欢迎信息
-echo "欢迎使用厕所收费服务"
-echo "大哥国际厕所公司开发 仅供娱乐 请勿当真"
+echo "欢迎使用智慧厕所Linux版"
+echo "绿色低碳•智能马桶 大哥国际厕所公司开发 仅供娱乐 请勿当真 Poweredby DageTolietCoLtd."
 uname -a
 echo "------------------------"
 echo
@@ -13,7 +13,9 @@ echo
 # 第一步：扫码登录/模拟登录
 echo "请扫码登录"
 echo "二维码：加载失败"
-echo "模拟登录请输入：LocalLogin"
+echo "其他登录方式"
+echo "TestFlash: LocalLogin"
+echo "QrCodeRefesh: QrCode"
 echo
 
 # 读取用户输入
@@ -26,7 +28,7 @@ if [ "$login_input" != "LocalLogin" ]; then
 fi
 
 echo
-echo "登录成功！"
+echo "登录成功！(Username:Dage666,Tag:UserGroup,VIP:none)"
 echo
 
 # 第二步：询问如厕时间
@@ -66,12 +68,13 @@ fi
 # 支付成功
 echo
 echo "支付成功！"
-echo
-echo "马桶开盖"
+# 清空页面
+clear
+echo "正在等候马桶(6-6666)响应"
 echo
 
 # 显示当前时间
 current_time=$(date "+%Y-%m-%d %H:%M:%S")
-echo "时间：$current_time"
+echo "开桶时间：$current_time"
 echo
 echo "请使用厕所，祝您如厕愉快！"
