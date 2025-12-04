@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>厕所测试版</title>
+    <title>智慧厕所</title>
     <!-- 大哥国际厕所公司开发 -->
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
@@ -78,12 +78,11 @@
     }
     /* From Uiverse.io by Yaya12085 */ 
 .card {
-  width: 100%;
-  border-width: 1px;
-  border-color: rgba(219, 234, 254, 1);
-  border-radius: 1rem;
+  width: auto;
+  border:none;
+  border-radius: 20px;
   background-color: rgba(255, 255, 255, 1);
-  padding:4px;
+  padding:10px;
 }
 
 .header {
@@ -91,7 +90,7 @@
   align-items: center;
   grid-gap: 1rem;
   width:100%;
-  gap: 1rem;
+
 }
 
 .icon {
@@ -122,6 +121,7 @@
 
 .actions {
   margin-top: 1.5rem;
+  width:90%;
 }
 
 .actions a {
@@ -132,7 +132,7 @@
   display: inline-block;
   border-radius: 0.5rem;
   width: 100%;
-  padding: 5px;
+  padding: 10px;
   text-align: center;
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -154,17 +154,269 @@
 .mark-as-read:hover {
   background-color: rgb(230, 231, 233);
 }
+/* From Uiverse.io by reglobby */ 
+.container {
+  width: 100px;
+  height: 280px;
+  background-color: #343541;
+  border-radius: 8px;
+  
+  width: auto;
+  border:none;
+  padding:5px;
+  
+font-size:20px !important;
+  flex-direction: column;
+}
+
+.nav-bar {
+  width: 100%;
+  height: 40px;
+  background-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-bar a {
+  color: #6B6C7B;
+  white-space: nowrap;
+  margin-left: 10px;
+  user-select: none;
+}
+
+.close {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.line {
+  position: absolute;
+  width: 20px;
+  height: 3px;
+  background-color: #6B6C7B;
+  border-radius: 30px;
+}
+
+.line.one {
+  transform: rotate(45deg)
+}
+
+.line.two {
+  transform: rotate(135deg)
+}
+
+.messages-area {
+  background-color: #343541;
+  width: 100%;
+  height: 210px;
+}
+
+.sender-area {
+  background-color: #343541;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  border-radius: 8px;
+}
+
+.message {
+  width: 100%;
+  height: 40px;
+}
+
+.message.one,
+.message.three,
+.message.five {
+  background-color: #2E2F3A;
+}
+
+.message.two,
+.message.four,
+.message.six {
+  background-color: #343541;
+}
+
+.send-img {
+  width: 30px;
+}
+
+.send-input {
+  outline: none;
+  display: flex;
+  border: none;
+  background: none;
+  height: 40px;
+  width: 100%;
+  border-radius: 10px;
+  background: none;
+  color: white;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.send-input::placeholder {
+  color: #828E9E;
+}
+
+.input-place {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+
+  align-items: center;
+  background-color: #40414F;
+  border-radius: 7px;
+  height: 40px;
+  width: 100%;
+  gap: 5px;
+  border: 1px solid #2E2F3A;
+}
+
+.send {
+  width: 30px;
+  height: 30px;
+  background-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.send-icon {
+  width: 17px;
+}
+/* From Uiverse.io by lenin55 */ 
+.cl-toggle-switch {
+ position: relative;
+}
+
+.cl-switch {
+ position: relative;
+ display: inline-block;
+}
+/* Input */
+.cl-switch > input {
+ appearance: none;
+ -moz-appearance: none;
+ -webkit-appearance: none;
+ z-index: -1;
+ position: absolute;
+ right: 6px;
+ top: -8px;
+ display: block;
+ margin: 0;
+ border-radius: 50%;
+ width: 40px;
+ height: 40px;
+ background-color: rgb(0, 0, 0, 0.38);
+ outline: none;
+ opacity: 0;
+ transform: scale(1);
+ pointer-events: none;
+ transition: opacity 0.3s 0.1s, transform 0.2s 0.1s;
+}
+/* Track */
+.cl-switch > span::before {
+ content: "";
+ float: right;
+ display: inline-block;
+ margin: 5px 0 5px 10px;
+ border-radius: 7px;
+ width: 36px;
+ height: 14px;
+ background-color: rgb(0, 0, 0, 0.38);
+ vertical-align: top;
+ transition: background-color 0.2s, opacity 0.2s;
+}
+/* Thumb */
+.cl-switch > span::after {
+ content: "";
+ position: absolute;
+ top: 2px;
+ right: 16px;
+ border-radius: 50%;
+ width: 20px;
+ height: 20px;
+ background-color: #fff;
+ box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+ transition: background-color 0.2s, transform 0.2s;
+}
+/* Checked */
+.cl-switch > input:checked {
+ right: -10px;
+ background-color: #85b8b7;
+}
+
+.cl-switch > input:checked + span::before {
+ background-color: #85b8b7;
+}
+
+.cl-switch > input:checked + span::after {
+ background-color: #018786;
+ transform: translateX(16px);
+}
+/* Hover, Focus */
+.cl-switch:hover > input {
+ opacity: 0.04;
+}
+
+.cl-switch > input:focus {
+ opacity: 0.12;
+}
+
+.cl-switch:hover > input:focus {
+ opacity: 0.16;
+}
+/* Active */
+.cl-switch > input:active {
+ opacity: 1;
+ transform: scale(0);
+ transition: transform 0s, opacity 0s;
+}
+
+.cl-switch > input:active + span::before {
+ background-color: #8f8f8f;
+}
+
+.cl-switch > input:checked:active + span::before {
+ background-color: #85b8b7;
+}
+/* Disabled */
+.cl-switch > input:disabled {
+ opacity: 0;
+}
+
+.cl-switch > input:disabled + span::before {
+ background-color: #ddd;
+}
+
+.cl-switch > input:checked:disabled + span::before {
+ background-color: #bfdbda;
+}
+
+.cl-switch > input:checked:disabled + span::after {
+ background-color: #61b5b4;
+}
   </style>
   <body>
     <div class="login_content">
-      <p><svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" viewBox="0 0 24 24"><path fill="none" stroke="#333333" d="M5.5 8v7.5h.25s1.016-1.152 1.5-2c.62-1.087 1.125-2.5 1.125-2.5h.25s.505 1.413 1.125 2.5c.484.848 1.5 2 1.5 2h.25V8m7 2.5v-1a1 1 0 0 0-1-1H15a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-1m-6.5 10C5.649 23.5.5 18.351.5 12S5.649.5 12 .5S23.5 5.649 23.5 12S18.351 23.5 12 23.5Z"/></svg>商户10000的平台</p>
+      <p><svg style="margin-bottom:-5px" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="none" stroke="#333333" d="M5.5 8v7.5h.25s1.016-1.152 1.5-2c.62-1.087 1.125-2.5 1.125-2.5h.25s.505 1.413 1.125 2.5c.484.848 1.5 2 1.5 2h.25V8m7 2.5v-1a1 1 0 0 0-1-1H15a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-1m-6.5 10C5.649 23.5.5 18.351.5 12S5.649.5 12 .5S23.5 5.649 23.5 12S18.351 23.5 12 23.5Z"/></svg>智慧厕所</p>
         <p id="content" style="margin-top:-30px;font-size:20px;">扫码付费后开门</p>
 
 <!-- 扫码 -->
         <div id="otto1_c">
       <img src="./author.png" onerror="alert('二维码加载失败！\n请联络所在商户管理员远程修复！')" alt="Qrcode"></img>
+      <p style="margin:0;font-size:20px;">有问题? <a style="color:blue" onclick="helper1.showModal()">站点工作人员远程协助</a></p>
   <br>  
-  <p style="margin-bottom:5px;font-size:17px; color:rgba(0,0,0,0.601)">更多方式</p><button class="btn" onclick="otto1()">TestAuth</button>
+  <p style="margin-bottom:5px;font-size:17px; color:rgba(0,0,0,0.601)">更多方式</p><button class="btn" onclick="otto1()">通过测试用户登录</button>
+  <button class="btn" ><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#ffffff" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27c3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10c5.35 0 9.25-3.67 9.25-9.09c0-1.15-.15-1.81-.15-1.81"/></svg> 登录</button>
   </div>
   
 <!-- 支付 -->
@@ -184,28 +436,73 @@
   <div style="display:none;" id="otto4"><p style="color:red">
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="#333333" d="M22.072 6.66c.126 1.058-.063 1.734-.309 2.133c2.029.56 3.879 1.974 4.743 3.82c.625 1.532.66 3.359.192 5.027C29.18 18.847 31 21.547 31 24.429c0 3.722-2.723 6.399-6.574 6.624v.016H9.03v-.004C4.26 30.95 2 27.75 2 24.023c0-2.494 2.149-5.47 4.549-6.49c-.002-.22.02-.387.056-.512c-.929-1.88.021-3.78.618-4.5l.183-.237l.044-.057l.01-.013c.83-1.083 1.331-1.736 4.895-3.279c3.887-1.683 5.269-3.336 5.8-4.006c.146-.184.28-.424.42-.67v-.002c.366-.652.763-1.358 1.478-1.245c.987.156 1.761 1.465 2.02 3.647M11.1 24.103a4.485 4.485 0 1 0 0-8.97a4.485 4.485 0 0 0 0 8.97m15.384-4.485a4.485 4.485 0 1 0-8.97 0a4.485 4.485 0 0 0 8.97 0M12.015 22.13a2.483 2.483 0 1 0 0-4.967a2.483 2.483 0 0 0 0 4.967m9.011 0a2.483 2.483 0 1 0 0-4.967a2.483 2.483 0 0 0 0 4.967m-4.448 6.946c2.183 0 3.953-1.54 3.953-3.918h-7.906c0 2.442 1.77 3.918 3.953 3.918"/></svg><br>00:00:00</p>
   <!-- From Uiverse.io by andrew-demchenk0 --> 
-
-<div class="info">
+<center>
+<a href="./" class="info">
     <div class="info__icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
     </div>
-    <div class="info__title">规定时间已到，请尽快关闭马桶。</div>
-</div>
-<div class="info">
+    <div class="info__title">规定时间已到，点按此处结束服务。</div>
+</a>
+<div style="margin-top:9px" class="info">
     <div class="info__icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
     </div>
     <div class="info__title">请在规定时间内完成如厕</div>
     <div class="info__close"><svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z" fill="#393a37"></path></svg></div>
-</div><br>
+</div>
+</center><br>
   <button style="background-color:rgba(0,0,0,0.521)" class="btn">续费</button>
   <button class="btn" onclick="a666.showModal()" >不拉了</button>
   
   </div>
   
-  <p style="color:rgb(189,189,189);font-size:10px;">大哥国际厕所公司开发 仅供娱乐</p>
+  <!-- From Uiverse.io by reglobby --> 
+	<dialog id="helper1" class="container">
+      <div class="nav-bar">
+      	<a>咨询</a>
+        <a onclick="helper1.close()" class="close">
+         	<div class="line one"></div>
+         	<div class="line two"></div>
+        </a>
       </div>
-    <p style="color:rgb(189,189,189)">版本号：version1.00.125:dp202511(Log)</p>
+      <div class="messages-area">
+        
+        <div class="message one">[智慧厕所]正在呼叫平台客服，请耐心等待</div>
+        <div class="message two">对不起，客服全忙的要死</div>
+        <div class="message three">
+          请稍候再试
+        </div>
+        <div class="message four">
+          <button><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#333333" d="M8.322 3.677L0 12l8.322 8.323L16.645 12zm7.371.01l-1.849 1.85l6.49 6.456l-6.49 6.49l1.85 1.817L24 11.993Z"/></svg>请求远程协助</button>
+          <button><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="#333333" d="M5 9a7 7 0 0 1 14 0v1.035c1.696.243 3 1.702 3 3.465v.25c0 1.775-1.531 3.331-3.332 3.248c-.74 2.12-2.622 3.549-4.653 3.911c-.47.172-1.026.091-1.515.091a1.5 1.5 0 0 1 0-3c.793 0 1.671-.115 2.207.609C16.003 17.992 17 16.689 17 15V9A5 5 0 0 0 7 9v6.25A1.75 1.75 0 0 1 5.25 17A3.25 3.25 0 0 1 2 13.75v-.25a3.5 3.5 0 0 1 3-3.465z"/></g></svg>人工服务</button>
+          <button><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#333333" d="m17.5 16.82l2.44 1.41l-.75 1.3L16 17.69V14h1.5zM24 17c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-.34.03-.67.08-1H2V4h18v6.68c2.36 1.13 4 3.53 4 6.32m-13.32-3c.18-.36.37-.7.6-1.03c-.09.03-.18.03-.28.03c-1.66 0-3-1.34-3-3s1.34-3 3-3s3 1.34 3 3c0 .25-.04.5-.1.73c.94-.46 1.99-.73 3.1-.73c.34 0 .67.03 1 .08V8a2 2 0 0 1-2-2H6c0 1.11-.89 2-2 2v4a2 2 0 0 1 2 2zM22 17c0-2.76-2.24-5-5-5s-5 2.24-5 5s2.24 5 5 5s5-2.24 5-5"/></svg>退费</button>
+          <button>评价</button>
+          
+          
+        </div>
+        <div class="message five"></div>
+        <div class="message six"></div>
+      </div>
+      <div class="sender-area">
+        <div class="input-place">
+        	<input placeholder="发送什么..." class="send-input" type="text">
+            <div class="send">
+				<svg class="send-icon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g><g><path fill="#6B6C7B" d="M481.508,210.336L68.414,38.926c-17.403-7.222-37.064-4.045-51.309,8.287C2.86,59.547-3.098,78.551,1.558,96.808 L38.327,241h180.026c8.284,0,15.001,6.716,15.001,15.001c0,8.284-6.716,15.001-15.001,15.001H38.327L1.558,415.193 c-4.656,18.258,1.301,37.262,15.547,49.595c14.274,12.357,33.937,15.495,51.31,8.287l413.094-171.409 C500.317,293.862,512,276.364,512,256.001C512,235.638,500.317,218.139,481.508,210.336z"></path></g></g></svg>
+        	</div>
+      	</div>
+      </div>
+    <div></div></dialog>
+  
+  <p style="color:rgb(189,189,189);font-size:10px;">大哥国际厕所公司开发 仅供娱乐</p>
+  <!-- From Uiverse.io by lenin55 --> 
+<div class="cl-toggle-switch">
+  <label class="cl-switch">
+    <input type="checkbox">
+    <span style="font-size:20px">演示模式</span>
+  </label>
+</div>
+      </div>
+    <p style="color:rgb(189,189,189)">版本号：version1.00.126:dp202512(Log)</p>
           
 <dialog class="card" id="a666">
   <div class="header">
