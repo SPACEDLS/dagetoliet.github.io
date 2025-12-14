@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大哥贵族厕所 | VIP Restroom System</title>
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-bg: #0a0a0a;
+            --panel-bg: #1a1a1a;
+            --danger-red: #ff4444;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: var(--panel-bg);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+            border: 1px solid #333;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-gold);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 状态显示区 */
+        .status-panel {
+            background: #000;
+            border: 1px solid var(--primary-gold);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .timer-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 48px;
+            color: #fff;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .cost-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 32px;
+            color: var(--primary-gold);
+            margin: 5px 0;
+        }
+
+        .rate-info {
+            font-size: 12px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA8A28 100%);
+            color: #000;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-stop {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .btn-stop.active {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+            border: none;
+        }
+
+        /* 弹窗/账单样式 */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            border-radius: 20px;
+        }
+
+        .receipt {
+            background: #fff;
+            color: #000;
+            padding: 30px;
+            width: 80%;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+
+        .receipt-total {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+            text-align: right;
+        }
+
+        .loading {
+            display: none;
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        /* 动画效果 */
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--danger-red);
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: blink 1s infinite;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>DAGE VIP TOLIET</h1>
+        <div class="subtitle">每分钟支出 ¥100.00 | 高端定制私人服务</div>
+
+        <div class="status-panel">
+            <div style="text-align: left; color: #888; font-size: 12px; margin-bottom: 5px;">
+                <span id="status-text">空闲 (VACANT)</span>
+                <span class="live-indicator" id="live-dot"></span>
+            </div>
+            
+            <div class="timer-display" id="timer">00:00:00</div>
+            <div class="cost-display">¥ <span id="cost">0.00</span></div>
+            
+            <div class="rate-info">
+                费率: ¥1.666/秒 (实时计费)
+            </div>
+        </div>
+
+        <div class="loading" id="loading-msg">正在验证并从账户支出 ¥5,000...</div>
+
+        <button class="btn btn-start" id="btn-start" onclick="startSession()">扫码开门 / 预授权</button>
+        <button class="btn btn-stop" id="btn-stop" onclick="endSession()" disabled>至尊用户dage114 [退出]</button>
+        <p>大哥国际厕所公司提供技术支持 仅供娱乐 请勿当真</p>
+    </div>
+
+    <div class="modal" id="receipt-modal">
+        <div class="receipt">
+            <div style="text-align: center; margin-bottom: 20px; font-weight: bold;">大哥贵族厕所账单结算</div>
+            <div class="receipt-line">
+                <span>日期</span>
+                <span id="bill-date">1900.1.1</span>
+            </div>
+            <div class="receipt-line">
+                <span>开始时间</span>
+                <span id="bill-start">12:00:00</span>
+            </div>
+            <div class="receipt-line">
+                <span>结束时间</span>
+                <span id="bill-end">12:05:00</span>
+            </div>
+            <div class="receipt-line">
+                <span>时长</span>
+                <span id="bill-duration">5m 00s</span>
+            </div>
+            <div class="receipt-line">
+                <span>单价</span>
+                <span>¥100.00/min</span>
+            </div>
+            
+            <div class="receipt-total">
+                总计: ¥<span id="bill-total">500.00</span>
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 12px; text-align: center; color: #666;">
+                预授权 ¥5000.00<br>
+                服务费 ¥<span>1200.00</span><br>
+              
+                实扣 ¥<span id="bill-deduct">500.00</span><br>
+                退回 ¥<span id="bill-refund">4500.00</span>
+            </div>
+
+            <button class="btn btn-start" style="margin-top: 20px; font-size: 14px; padding: 10px;" onclick="resetSystem()">关闭 / 下一位</button>
+        </div>
+    </div>
+
+    <script>
+        let startTime;
+        let timerInterval;
+        let isRunning = false;
+        const RATE_PER_MINUTE = 100;
+        
+        const timerEl = document.getElementById('timer');
+        const costEl = document.getElementById('cost');
+        const btnStart = document.getElementById('btn-start');
+        const btnStop = document.getElementById('btn-stop');
+        const statusText = document.getElementById('status-text');
+        const liveDot = document.getElementById('live-dot');
+        const loadingMsg = document.getElementById('loading-msg');
+        
+        // 格式化数字
+        function formatNumber(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        // 开始会话
+        function startSession() {
+            if (isRunning) return;
+
+            // 模拟API请求延迟
+            btnStart.disabled = true;
+            loadingMsg.style.display = 'block';
+
+            setTimeout(() => {
+                loadingMsg.style.display = 'none';
+                isRunning = true;
+                startTime = new Date();
+                
+                // UI 更新
+                btnStart.style.display = 'none';
+                btnStop.disabled = false;
+                btnStop.classList.add('active');
+                btnStop.innerText = "结束使用 / 开门";
+                statusText.innerText = "使用中 (OCCUPIED)";
+                statusText.style.color = "#ff4444";
+                liveDot.style.display = 'inline-block';
+                
+                // 启动计时器 (10毫秒刷新一次以显得流畅)
+                timerInterval = setInterval(updateTimer, 30);
+            }, 1500); // 1.5秒模拟支付时间
+        }
+
+        // 更新计时器和费用
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startTime; // 毫秒差
+
+            // 计算时间显示
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            const milliseconds = Math.floor((diff % 1000) / 10); // 取前两位
+
+            timerEl.innerText = `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`;
+
+            // 计算费用： (总毫秒数 / 60000) * 100
+            // 也就是每分钟 100 元
+            const totalMinutes = diff / 60000;
+            const currentCost = totalMinutes * RATE_PER_MINUTE;
+
+            costEl.innerText = currentCost.toFixed(2);
+        }
+
+        // 结束会话
+        function endSession() {
+            if (!isRunning) return;
+            
+            clearInterval(timerInterval);
+            isRunning = false;
+            const endTime = new Date();
+            
+            // 准备账单数据
+            const diff = endTime - startTime;
+            const totalCost = (diff / 60000) * RATE_PER_MINUTE
+            + 1200;
+            
+            // 填充账单DOM
+            document.getElementById('bill-date').innerText = endTime.toLocaleDateString();
+            document.getElementById('bill-start').innerText = startTime.toLocaleTimeString();
+            document.getElementById('bill-end').innerText = endTime.toLocaleTimeString();
+            
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            document.getElementById('bill-duration').innerText = `${minutes}分 ${seconds}秒`;
+            
+            document.getElementById('bill-total').innerText = totalCost.toFixed(2);
+            document.getElementById('bill-deduct').innerText = totalCost.toFixed(2);
+            document.getElementById('bill-refund').innerText = (5000 - totalCost).toFixed(2);
+
+            // 显示弹窗
+            document.getElementById('receipt-modal').style.display = 'flex';
+        }
+
+        // 重置系统
+        function resetSystem() {
+            document.getElementById('receipt-modal').style.display = 'none';
+            
+            timerEl.innerText = "00:00:00";
+            costEl.innerText = "0.00";
+            
+            btnStart.style.display = 'block';
+            btnStart.disabled = false;
+            
+            btnStop.classList.remove('active');
+            btnStop.disabled = true;
+            btnStop.innerText = "结束使用 / 结算";
+            
+            statusText.innerText = "空闲 (VACANT)";
+            statusText.style.color = "#888";
+            liveDot.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
