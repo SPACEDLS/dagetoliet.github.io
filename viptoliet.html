@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大哥贵族厕所 | VIP Restroom System</title>
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-bg: #0a0a0a;
+            --panel-bg: #1a1a1a;
+            --danger-red: #ff4444;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: var(--panel-bg);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+            border: 1px solid #333;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-gold);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 状态显示区 */
+        .status-panel {
+            background: #000;
+            border: 1px solid var(--primary-gold);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .timer-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 48px;
+            color: #fff;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .cost-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 32px;
+            color: var(--primary-gold);
+            margin: 5px 0;
+        }
+
+        .rate-info {
+            font-size: 12px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA8A28 100%);
+            color: #000;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-stop {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .btn-stop.active {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+            border: none;
+        }
+
+        /* 弹窗/账单样式 */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            border-radius: 20px;
+        }
+
+        .receipt {
+            background: #fff;
+            color: #000;
+            padding: 30px;
+            width: 80%;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+
+        .receipt-total {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+            text-align: right;
+        }
+
+        .loading {
+            display: none;
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        /* 动画效果 */
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--danger-red);
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: blink 1s infinite;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>DAGE VIP TOLIET</h1>
+        <div class="subtitle">
+          订购配套设备 私人定制
+        </div>
+           <h1 style="font-weight:bold;font-size:30px;">¥ 13999</h1>
+        <div class="subtitle">
+      一次买断(全套 智能马桶+智能大屏幕)
+        </div>
+    
+   <div class="loading" id="loading-msg">真当真了吗？</div>
+
+    
+      
+        <button class="btn btn-start" id="btn-start" onclick="startSession()">交谈</button>
+        <button class="btn btn-stop" id="btn-stop" onclick="go('./toliet/viptoliet/')" >在线测试系统</button>
+        <p>大哥国际厕所公司提供技术支持 仅供娱乐 请勿当真</p>
+    </div>
+
+    <div class="modal" id="receipt-modal">
+        <div class="receipt">
+            <div style="text-align: center; margin-bottom: 20px; font-weight: bold;">采购单</div>
+            <div class="receipt-line">
+                <span>日期</span>
+                <span id="bill-date">-</span>
+            </div>
+            <div class="receipt-line">
+                <span>开始时间</span>
+                <span id="bill-start">12:00:00</span>
+            </div>
+            <div class="receipt-line">
+                <span>结束时间</span>
+                <span id="bill-end">12:05:00</span>
+            </div>
+            <div class="receipt-line">
+                <span>时长</span>
+                <span id="bill-duration">5m 00s</span>
+            </div>
+            <div class="receipt-line">
+                <span>单价</span>
+                <span>¥199999.00</span>
+            </div>
+            
+            <div class="receipt-total">
+                总计: ¥<span id="bill-total">140000.00</span>
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 12px; text-align: center; color: #666;">
+              优惠 -¥186000<br>
+                服务费 ¥<span>1.00</span><br>
+            </div>
+
+            <button class="btn btn-start" style="margin-top: 20px; font-size: 14px; padding: 10px;" onclick="resetSystem()">求也要排队</button>
+        </div>
+    </div>
+<script>
+    const loadingMsg = document.getElementById('loading-msg');
+      
+          function startSession() {
+
+            loadingMsg.style.display = 'block';
+
+            setTimeout(() => {
+                loadingMsg.style.display = 'none';
+            }, 3000); 
+            }
+            function go(value){
+              window.location.href = value;
+            }
+            function otto114(){
+            document.getElementById('receipt-modal').style.display = 'block';
+            }
+  </script>
+</body>
+</html>
