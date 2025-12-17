@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JumpBigBrother 大哥跳</title>
+    <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css" />
+<script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+<link
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet"
+/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .game-container {
+            width: 100%;
+            height: 100vh;
+            background-color: #ADD8E6;
+            position: relative;
+            overflow: hidden;
+    
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: crosshair;
+        }
+
+        .ball {
+            position: absolute;
+            border-radius: 50%;
+       background:url(./pic/dage01.jpg);
+         background-size: cover;
+background-position: center;
+background-repeat: no-repeat; 
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .ball:hover {
+            transform: scale(1.1);
+        }
+
+        .ball.clicked {
+            animation: disappear 0.3s ease-out forwards;
+        }
+
+        @keyframes disappear {
+            to {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        .score-board {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 1000px;
+            z-index: 100;
+        }
+
+        .tools {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            height:48px;
+            width:48px;
+            font-size: 24px;
+            background-color: rgba(255, 255, 255, 0.8);
+          
+            border-radius: 1000px;
+            z-index: 100;
+        }
+        
+        .success-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+          width:200px;
+            display: none;
+            z-index: 200;
+            animation: celebrate 1s ease-in-out infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        .start-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        
+        }
+        
+    </style>
+</head>
+<body>
+       <div class="score-board"> <span id="score">0</span></div>
+   <mdui-tooltip content="设定">
+       <mdui-button-icon id="openSettings" class="tools" icon="settings"></mdui-button-icon>
+       </mdui-tooltip>
+
+    <div class="game-container" id="gameContainer">
+        <div class="success-message" id="successMessage">您成功了！</div>
+        
+           <mdui-button  id="startButton" variant="tonal" class="start-button">开始游戏</mdui-button>
+           
+    </div>
+<mdui-dialog
+  headline="NiceBall 大哥跳 设定"
+  close-on-overlay-click
+  class="example-headline"
+>
+  <p>球体</p>
+  <mdui-text-field id="pic_url" label="渲染在球体的背景图片地址" helper="必须以http开头(http://)" helper-on-focus></mdui-text-field>
+  
+  <p style="margin-bottom:-1px">图片库</p>
+<mdui-list>
+  <mdui-collapse accordion value="item-1">
+    <mdui-collapse-item value="item-1">
+      <mdui-list-item slot="header" icon="image">Pic</mdui-list-item>
+      <div style="margin-left: 2.5rem">
+        <mdui-list-item>0</mdui-list-item>
+      </div>
+    </mdui-collapse-item>
+  </mdui-collapse>
+  </mdui-list>
+<mdui-button icon="check" id="saves">保存</mdui-button>
+
+</mdui-dialog>
+    <script>
+        let score = 0;
+        let gameActive = false;
+        let ballInterval;
+const settings = document.querySelector(".example-headline");
+document.getElementById('openSettings').addEventListener("click", () => settings.open = true);
+const picUrlInput = document.getElementById('pic_url');
+document.getElementById('saves').addEventListener('click', () => {
+    const picUrl = picUrlInput.value;
+    if (picUrl.startsWith('http://') || picUrl.startsWith('https://')) {
+        document.querySelector('.ball').style.backgroundImage = `url(${picUrl})`;
+        settings.open = false;
+    } else {
+        alert('图片地址必须以http开头');
+    }
+});
+
+        const gameContainer = document.getElementById('gameContainer');
+        const scoreElement = document.getElementById('score');
+        const successMessage = document.getElementById('successMessage');
+        const startButton = document.getElementById('startButton');
+
+        function createBall() {
+            const ball = document.createElement('div');
+            ball.className = 'ball';
+            
+        
+            const size = Math.random() * 40 + 30;
+            ball.style.width = size + 'px';
+            ball.style.height = size + 'px';
+            
+            const maxX = gameContainer.offsetWidth - size;
+            const maxY = gameContainer.offsetHeight - size;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            ball.style.left = x + 'px';
+            ball.style.top = y + 'px';
+            
+      
+            ball.addEventListener('click', function() {
+                if (!this.classList.contains('clicked')) {
+                    this.classList.add('clicked');
+                    score++;
+                    scoreElement.textContent = score;
+                    
+                        if (score >= 20) {
+                        endGame(true);
+                    }
+                    
+                          setTimeout(() => {
+                        this.remove();
+                    }, 300);
+                }
+            });
+            
+            gameContainer.appendChild(ball);
+            
+            setTimeout(() => {
+                if (!ball.classList.contains('clicked')) {
+                    ball.remove();
+                }
+            }, 5000);
+        }
+
+        function spawnBalls() {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createBall(), i * 200);
+            }
+        }
+
+        function startGame() {
+            score = 0;
+            scoreElement.textContent = score;
+            gameActive = true;
+            startButton.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            const existingBalls = gameContainer.querySelectorAll('.ball');
+            existingBalls.forEach(ball => ball.remove());
+            
+            spawnBalls();
+            
+            ballInterval = setInterval(spawnBalls, 2000);
+        }
+
+        function endGame(success) {
+            gameActive = false;
+            clearInterval(ballInterval);
+            
+            if (success) {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    startButton.textContent = '重新开始';
+                    startButton.style.display = 'block';
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        startButton.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
