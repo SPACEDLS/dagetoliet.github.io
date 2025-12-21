@@ -298,7 +298,7 @@
         const menuContainer = document.getElementById('menu-container');
 menuContainer.innerHTML="<div style='background-color:#d4af37;border-radius:10px;padding:10px;color:#fff'>加载菜单中...</div>";
 
-        fetch('Foods.json')
+        fetch('foods.json')
             .then(response => response.json())
             .then(data => {
                 menuItems = data;
