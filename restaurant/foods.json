@@ -1,0 +1,7 @@
+[
+            { id: 1, name: "大肉筷子", price: 68, desc: "大哥最爱", icon: "🍖" },
+            { id: 2, name: "鸡", price: 58, desc: "我天天杀鸡一天杀200多只鸡好让人家吃肉", icon: "🌶️" },
+            { id: 3, name: "至尊黄金雪", price: 28, desc: "每一粒米都被 包裹，好吃的要蹿希", icon: "🍚" },
+            { id: 4, name: "大哥龙虾", price: 288, desc: "大哥家买的", icon: "🦞" },
+            { id: 5, name: "养生保温杯水", price: 0, desc: "大哥特供，反正喝不死，不能只点这个知道吧。", icon: "🍵" }
+            ]
