@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "HK1-0",
+    "protocol": "JokerSocks",
+    "tag": "DG",
+    "ping": 100,
+    "icon": "666"
+  },
+  {
+    "id": 2,
+    "name": "DPX1",
+    "protocol": "C6",
+    "tag": "x0.8",
+    "ping": 420,
+    "icon": "SB"
+  },
+   {
+    "id":4,
+    "name": "US-01",
+    "protocol": "DGSJOKER",
+    "tag": "x0.1",
+    "ping": 130,
+    "icon": ""
+  },
+    {
+    "id":5,
+    "name": "DGJ-1",
+    "protocol": "DGSJOKER",
+    "tag": "x0.1",
+    "ping": 130,
+    "icon": ""
+  },
+     {
+    "id":5,
+    "name": "DGJ-2",
+    "protocol": "DGSJOKER",
+    "tag": "x0.1",
+    "ping": 130,
+    "icon": ""
+  }
+  
+ 
+  ]
