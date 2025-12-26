@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏规则 - 大哥斗地主</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d4a3e 100%);
+            overflow: hidden;
+        }
+        .content-card {
+            background: rgba(26, 71, 42, 0.9);
+            border: 2px solid #d4af37;
+            backdrop-filter: blur(10px);
+        }
+        .rule-section {
+            background: rgba(45, 74, 62, 0.8);
+            border: 1px solid #d4af37;
+            backdrop-filter: blur(5px);
+        }
+        .card-example {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .back-button {
+            background: linear-gradient(145deg, #d4af37, #b8941f);
+            border: 2px solid #f4e99b;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-auto">
+    <div class="min-h-full p-6">
+        <!-- 头部 -->
+        <div class="flex items-center justify-between mb-8">
+            <button id="backBtn" class="back-button text-white px-6 py-3 rounded-lg font-bold text-lg">
+                ← 返回主菜单
+            </button>
+            <h1 class="text-white text-4xl font-bold" style="font-family: 'Noto Serif SC', serif;">游戏规则</h1>
+            <div class="w-24"></div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content-card rounded-lg p-8 max-w-4xl mx-auto">
+            <!-- 基本规则 -->
+            <div class="rule-section rounded-lg p-6 mb-6">
+                <h2 class="text-yellow-400 text-2xl font-bold mb-4">🎯 基本规则</h2>
+                <div class="text-white space-y-3">
+                    <p>• 游戏使用一副54张的扑克牌（包含大小王）</p>
+                    <p>• 3名玩家参与，每人发17张牌，留3张底牌</p>
+                    <p>• 通过叫地主确定地主身份，地主获得底牌并先出牌</p>
+                    <p>• 地主一方对抗其他两名玩家组成的农民方</p>
+                    <p>• 先出完牌的一方获胜</p>
+                </div>
+            </div>
+
+            <!-- 牌型介绍 -->
+            <div class="rule-section rounded-lg p-6 mb-6">
+                <h2 class="text-yellow-400 text-2xl font-bold mb-4">🃏 牌型介绍</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 单张 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">单张</h3>
+                        <p class="text-sm mb-2">任意一张单牌</p>
+                        <div class="flex gap-2">
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♥5</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♠K</div>
+                        </div>
+                    </div>
+
+                    <!-- 对子 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">对子</h3>
+                        <p class="text-sm mb-2">两张点数相同的牌</p>
+                        <div class="flex gap-2">
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♥8</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♠8</div>
+                        </div>
+                    </div>
+
+                    <!-- 三张 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">三张</h3>
+                        <p class="text-sm mb-2">三张点数相同的牌</p>
+                        <div class="flex gap-2">
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♥9</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♠9</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♦9</div>
+                        </div>
+                    </div>
+
+                    <!-- 三带一 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">三带一</h3>
+                        <p class="text-sm mb-2">三张+一张单牌</p>
+                        <div class="flex gap-2">
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♥J</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♠J</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♦J</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♣3</div>
+                        </div>
+                    </div>
+
+                    <!-- 三带二 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">三带二</h3>
+                        <p class="text-sm mb-2">三张+一对</p>
+                        <div class="flex gap-2">
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♥Q</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♠Q</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♦Q</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♣7</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♥7</div>
+                        </div>
+                    </div>
+
+                    <!-- 顺子 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">顺子</h3>
+                        <p class="text-sm mb-2">五张或以上连续点数</p>
+                        <div class="flex gap-1">
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-gray-900 font-bold text-xs">4</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-red-500 font-bold text-xs">5</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-gray-900 font-bold text-xs">6</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-red-500 font-bold text-xs">7</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-gray-900 font-bold text-xs">8</div>
+                        </div>
+                    </div>
+
+                    <!-- 连对 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">连对</h3>
+                        <p class="text-sm mb-2">三对或以上连续点数</p>
+                        <div class="flex gap-1">
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-gray-900 font-bold text-xs">8</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-red-500 font-bold text-xs">8</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-gray-900 font-bold text-xs">9</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-red-500 font-bold text-xs">9</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-gray-900 font-bold text-xs">10</div>
+                            <div class="card-example w-10 h-14 flex items-center justify-center text-red-500 font-bold text-xs">10</div>
+                        </div>
+                    </div>
+
+                    <!-- 炸弹 -->
+                    <div class="text-white">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-300">炸弹</h3>
+                        <p class="text-sm mb-2">四张点数相同的牌</p>
+                        <div class="flex gap-2">
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♥A</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♠A</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-red-500 font-bold">♦A</div>
+                            <div class="card-example w-12 h-16 flex items-center justify-center text-gray-900 font-bold">♣A</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 牌型大小 -->
+            <div class="rule-section rounded-lg p-6 mb-6">
+                <h2 class="text-yellow-400 text-2xl font-bold mb-4">📊 牌型大小</h2>
+                <div class="text-white space-y-3">
+                    <p><strong class="text-yellow-300">点数大小：</strong>大王 > 小王 > 2 > A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3</p>
+                    <p><strong class="text-yellow-300">牌型大小：</strong></p>
+                    <ul class="ml-6 space-y-1">
+                        <li>• 王炸（最大）</li>
+                        <li>• 炸弹（按点数比较）</li>
+                        <li>• 其他牌型（同类型才能比较）</li>
+                    </ul>
+                    <p><strong class="text-yellow-300">特殊规则：</strong>炸弹可以压过任何非炸弹牌型</p>
+                </div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="rule-section rounded-lg p-6 mb-6">
+                <h2 class="text-yellow-400 text-2xl font-bold mb-4">🎮 游戏流程</h2>
+                <div class="text-white space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-yellow-400 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mt-1">1</div>
+                        <div>
+                            <h3 class="font-bold text-yellow-300">发牌</h3>
+                            <p>系统随机发牌，每人17张，留3张底牌</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-yellow-400 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mt-1">2</div>
+                        <div>
+                            <h3 class="font-bold text-yellow-300">叫地主</h3>
+                            <p>玩家依次选择是否叫地主，叫地主者获得底牌</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-yellow-400 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mt-1">3</div>
+                        <div>
+                            <h3 class="font-bold text-yellow-300">出牌</h3>
+                            <p>地主先出牌，按顺时针方向轮流出牌</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-yellow-400 text-gray-900 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mt-1">4</div>
+                        <div>
+                            <h3 class="font-bold text-yellow-300">胜负</h3>
+                            <p>先出完牌的一方获胜</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 计分规则 -->
+            <div class="rule-section rounded-lg p-6">
+                <h2 class="text-yellow-400 text-2xl font-bold mb-4">🏆 计分规则</h2>
+                <div class="text-white space-y-3">
+                    <p><strong class="text-yellow-300">基础得分：</strong></p>
+                    <ul class="ml-6 space-y-1">
+                        <li>• 地主获胜：+100分</li>
+                        <li>• 农民获胜：+50分</li>
+                        <li>• 失败：-50分</li>
+                    </ul>
+                    <p><strong class="text-yellow-300">倍数计算：</strong></p>
+                    <ul class="ml-6 space-y-1">
+                        <li>• 炸弹：×2</li>
+                        <li>• 王炸：×4</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部版权 -->
+        <div class="text-center text-white text-sm opacity-60 mt-8">
+            <p>© 2024 大哥斗地主 | 经典扑克游戏</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 返回按钮事件
+            document.getElementById('backBtn').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+
+            // 页面加载动画
+            anime({
+                targets: '.content-card',
+                scale: [0.9, 1],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutExpo'
+            });
+
+            anime({
+                targets: '.rule-section',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutExpo'
+            });
+        });
+    </script>
+</body>
+</html>

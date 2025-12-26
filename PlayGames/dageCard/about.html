@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于游戏 - 大哥斗地主</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d4a3e 100%);
+            overflow: hidden;
+        }
+        .content-card {
+            background: rgba(26, 71, 42, 0.9);
+            border: 2px solid #d4af37;
+            backdrop-filter: blur(10px);
+        }
+        .feature-card {
+            background: rgba(45, 74, 62, 0.8);
+            border: 1px solid #d4af37;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(212, 175, 55, 0.2);
+        }
+        .back-button {
+            background: linear-gradient(145deg, #d4af37, #b8941f);
+            border: 2px solid #f4e99b;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+        .logo-container {
+            background: linear-gradient(145deg, #d4af37, #b8941f);
+            border: 3px solid #f4e99b;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        .tech-badge {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid #d4af37;
+            color: #f4e99b;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-auto">
+    <div class="min-h-full p-6">
+        <!-- 头部 -->
+        <div class="flex items-center justify-between mb-8">
+            <button id="backBtn" class="back-button text-white px-6 py-3 rounded-lg font-bold text-lg">
+                ← 返回主菜单
+            </button>
+            <h1 class="text-white text-4xl font-bold" style="font-family: 'Noto Serif SC', serif;">关于游戏</h1>
+            <div class="w-24"></div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content-card rounded-lg p-8 max-w-4xl mx-auto">
+            <!-- 游戏Logo和标题 -->
+            <div class="text-center mb-8">
+                <div class="logo-container w-32 h-32 rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <span class="text-6xl">👑</span>
+                </div>
+                <h2 class="text-yellow-400 text-5xl font-bold mb-2" style="font-family: 'Noto Serif SC', serif;">大哥斗地主</h2>
+                <p class="text-white text-xl">版本 1.0.0</p>
+            </div>
+
+            <!-- 游戏介绍 -->
+            <div class="feature-card rounded-lg p-6 mb-6">
+                <h3 class="text-yellow-400 text-2xl font-bold mb-4">🎮 游戏介绍</h3>
+                <div class="text-white space-y-3">
+                    <p>大哥斗地主是一款经典的扑克牌游戏，融合了策略、智慧和运气的完美结合。游戏采用现代化的界面设计，为玩家提供沉浸式的游戏体验。</p>
+                    <p>无论您是斗地主高手还是初学者，都能在这里找到属于自己的乐趣。挑战AI对手，提升自己的牌技，成为真正的"大哥"！</p>
+                </div>
+            </div>
+
+            <!-- 特色功能 -->
+            <div class="feature-card rounded-lg p-6 mb-6">
+                <h3 class="text-yellow-400 text-2xl font-bold mb-4">✨ 特色功能</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="text-white">
+                        <h4 class="text-lg font-bold mb-2 text-yellow-300">🎯 智能AI对手</h4>
+                        <p class="text-sm">配备高级AI算法，提供具有挑战性的游戏体验</p>
+                    </div>
+                    <div class="text-white">
+                        <h4 class="text-lg font-bold mb-2 text-yellow-300">🎨 精美界面</h4>
+                        <p class="text-sm">现代化设计，流畅的动画效果，视觉体验极佳</p>
+                    </div>
+                    <div class="text-white">
+                        <h4 class="text-lg font-bold mb-2 text-yellow-300">📱 横屏优化</h4>
+                        <p class="text-sm">专为横屏设备优化，完美适配各种屏幕尺寸</p>
+                    </div>
+                    <div class="text-white">
+                        <h4 class="text-lg font-bold mb-2 text-yellow-300">📊 数据统计</h4>
+                        <p class="text-sm">详细的游戏统计，记录您的游戏成就</p>
+                    </div>
+                    <div class="text-white">
+                        <h4 class="text-lg font-bold mb-2 text-yellow-300">🎵 音效系统</h4>
+                        <p class="text-sm">沉浸式音效体验，让游戏更加生动</p>
+                    </div>
+                    <div class="text-white">
+                        <h4 class="text-lg font-bold mb-2 text-yellow-300">💡 智能提示</h4>
+                        <p class="text-sm">贴心的游戏提示，帮助您做出最佳决策</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 技术特色 -->
+            <div class="feature-card rounded-lg p-6 mb-6">
+                <h3 class="text-yellow-400 text-2xl font-bold mb-4">⚙️ 技术特色</h3>
+                <div class="text-white mb-4">
+                    <p class="mb-3">本游戏采用现代Web技术构建，确保流畅的游戏体验：</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">HTML5</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">CSS3</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">JavaScript ES6+</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">Tailwind CSS</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">Anime.js</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">Matter.js</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">p5.js</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">响应式设计</span>
+                    <span class="tech-badge px-3 py-1 rounded-full text-sm">PWA支持</span>
+                </div>
+            </div>
+
+            <!-- 制作信息 -->
+            <div class="feature-card rounded-lg p-6 mb-6">
+                <h3 class="text-yellow-400 text-2xl font-bold mb-4">👨‍💻 制作信息</h3>
+                <div class="text-white space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">游戏名称:</span>
+                        <span>大哥斗地主</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">版本:</span>
+                        <span>1.0.0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">发布日期:</span>
+                        <span>2024年</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">平台:</span>
+                        <span>Web浏览器</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">支持设备:</span>
+                        <span>桌面/平板/手机横屏</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版权信息 -->
+            <div class="text-center text-white text-sm opacity-60">
+                <p>© 2024 大哥斗地主 | 版权所有</p>
+                <p class="mt-2">本游戏仅供娱乐，禁止用于任何商业用途</p>
+            </div>
+        </div>
+
+        <!-- 底部装饰 -->
+        <div class="text-center text-white text-sm opacity-60 mt-8">
+            <p>感谢您选择大哥斗地主！祝您游戏愉快！</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 返回按钮事件
+            document.getElementById('backBtn').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+
+            // 页面加载动画
+            anime({
+                targets: '.content-card',
+                scale: [0.9, 1],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutExpo'
+            });
+
+            anime({
+                targets: '.feature-card',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutExpo'
+            });
+
+            // Logo动画
+            anime({
+                targets: '.logo-container',
+                rotate: [0, 360],
+                duration: 2000,
+                easing: 'easeInOutQuad',
+                delay: 500
+            });
+
+            // 技术标签动画
+            anime({
+                targets: '.tech-badge',
+                scale: [0, 1],
+                duration: 400,
+                delay: anime.stagger(50),
+                easing: 'easeOutBack'
+            });
+        });
+    </script>
+</body>
+</html>

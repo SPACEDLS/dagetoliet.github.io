@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏房间 - 大哥斗地主</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d4a3e 100%);
+            overflow: hidden;
+        }
+        .game-table {
+            background: radial-gradient(ellipse at center, #2d4a3e 0%, #1a472a 100%);
+            border: 3px solid #d4af37;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        .card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+        .card.selected {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(212, 175, 55, 0.4);
+            border-color: #d4af37;
+        }
+        .card-back {
+            background: linear-gradient(145deg, #1e3a8a, #1e40af);
+            border: 1px solid #d4af37;
+        }
+        .player-area {
+            background: rgba(26, 71, 42, 0.8);
+            border: 1px solid #d4af37;
+            backdrop-filter: blur(10px);
+        }
+        .control-button {
+            background: linear-gradient(145deg, #d4af37, #b8941f);
+            border: 2px solid #f4e99b;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+        .control-button:disabled {
+            background: linear-gradient(145deg, #6b7280, #4b5563);
+            border-color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .orientation-overlay {
+            background: linear-gradient(135deg, #1a472a 0%, #2d4a3e 100%);
+            z-index: 9999;
+        }
+        .timer-circle {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .chat-message {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #d4af37;
+            backdrop-filter: blur(5px);
+        }
+        .winner-effect {
+            animation: winnerGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes winnerGlow {
+            from { box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
+            to { box-shadow: 0 0 40px rgba(212, 175, 55, 0.8); }
+        }
+    </style>
+</head>
+<body class="h-screen w-screen">
+    <!-- 横屏检测覆盖层 -->
+    <div id="orientationOverlay" class="orientation-overlay fixed inset-0 flex items-center justify-center hidden">
+        <div class="text-center text-white">
+            <div class="text-6xl mb-4">📱</div>
+            <h2 class="text-4xl font-bold mb-4">请换横屏游玩</h2>
+            <p class="text-xl">请将您的设备旋转为横屏模式以获得最佳游戏体验</p>
+        </div>
+    </div>
+
+    <!-- 主游戏区域 -->
+    <div id="gameContent" class="h-full w-full flex flex-col">
+        <!-- 顶部信息栏 -->
+        <div class="h-16 flex items-center justify-between px-6 border-b border-yellow-400">
+            <div class="flex items-center space-x-4">
+                <button id="backBtn" class="text-white hover:text-yellow-400 transition-colors">
+                    ← 返回主菜单
+                </button>
+                <div class="text-white text-xl font-bold">第 <span id="gameRound">1</span> 局</div>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <div class="text-white">
+                    地主: <span id="landlordName" class="text-yellow-400 font-bold">待定</span>
+                </div>
+                <div class="text-white">
+                    倍数: <span id="gameMultiplier" class="text-red-400 font-bold">1</span>
+                </div>
+                <button id="settingsBtn" class="text-white hover:text-yellow-400 transition-colors">
+                    ⚙️
+                </button>
+            </div>
+        </div>
+
+        <!-- 游戏桌面区域 -->
+        <div class="flex-1 flex">
+            <!-- 左侧AI玩家区域 -->
+            <div class="w-1/4 p-4">
+                <div class="player-area rounded-lg p-4 h-full">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center text-white text-2xl">
+                            AI1
+                        </div>
+                        <div class="text-white font-bold">智能对手A</div>
+                        <div class="text-sm text-gray-300">剩余: <span id="ai1Cards">17</span> 张</div>
+                    </div>
+                    
+                    <!-- AI手牌区域 (背面) -->
+                    <div class="flex flex-wrap justify-center gap-1" id="ai1Hand">
+                        <!-- AI手牌将通过JavaScript生成 -->
+                    </div>
+                    
+                    <!-- AI出牌区域 -->
+                    <div class="mt-4 min-h-16 flex items-center justify-center" id="ai1Played">
+                        <div class="text-gray-400 text-sm">等待出牌...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中央游戏区域 -->
+            <div class="w-1/2 p-4">
+                <div class="game-table rounded-lg h-full relative">
+                    <!-- 底牌区域 -->
+                    <div class="absolute top-4 left-1/2 transform -translate-x-1/2">
+                        <div class="text-center">
+                            <div class="text-white text-sm mb-2">底牌</div>
+                            <div class="flex gap-1" id="landlordCards">
+                                <!-- 底牌将通过JavaScript生成 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 中央出牌区域 -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div class="text-center">
+                            <div class="text-white text-lg mb-4" id="currentPlayer">等待游戏开始...</div>
+                            <div class="flex gap-2 justify-center min-h-24 items-center" id="centerPlayed">
+                                <div class="text-gray-400">游戏准备中...</div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="inline-flex items-center space-x-2 text-white text-sm">
+                                    <span>计时器:</span>
+                                    <div class="relative w-8 h-8">
+                                        <svg class="w-8 h-8 transform -rotate-90" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="45" stroke="#374151" stroke-width="8" fill="none"/>
+                                            <circle id="timerCircle" cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="8" fill="none" class="timer-circle"/>
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center text-xs font-bold" id="timerText">30</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 游戏状态提示 -->
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                        <div class="text-center">
+                            <div class="text-yellow-400 text-lg font-bold" id="gameStatus">准备开始游戏</div>
+                            <div class="text-white text-sm mt-1" id="gameMessage">点击"开始游戏"按钮开始新的一局</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧AI玩家区域 -->
+            <div class="w-1/4 p-4">
+                <div class="player-area rounded-lg p-4 h-full">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center text-white text-2xl">
+                            AI2
+                        </div>
+                        <div class="text-white font-bold">智能对手B</div>
+                        <div class="text-sm text-gray-300">剩余: <span id="ai2Cards">17</span> 张</div>
+                    </div>
+                    
+                    <!-- AI手牌区域 (背面) -->
+                    <div class="flex flex-wrap justify-center gap-1" id="ai2Hand">
+                        <!-- AI手牌将通过JavaScript生成 -->
+                    </div>
+                    
+                    <!-- AI出牌区域 -->
+                    <div class="mt-4 min-h-16 flex items-center justify-center" id="ai2Played">
+                        <div class="text-gray-400 text-sm">等待出牌...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 玩家控制区域 -->
+        <div class="h-48 border-t border-yellow-400">
+            <div class="h-full flex">
+                <!-- 玩家手牌区域 -->
+                <div class="flex-1 p-4">
+                    <div class="text-center mb-2">
+                        <div class="text-white font-bold">你的手牌</div>
+                        <div class="text-sm text-gray-300">剩余: <span id="playerCards">0</span> 张</div>
+                    </div>
+                    <div class="flex justify-center items-end gap-1 h-24" id="playerHand">
+                        <!-- 玩家手牌将通过JavaScript生成 -->
+                    </div>
+                </div>
+
+                <!-- 控制按钮区域 -->
+                <div class="w-80 p-4 border-l border-yellow-400">
+                    <div class="grid grid-cols-2 gap-3 h-full">
+                        <button id="callLandlordBtn" class="control-button text-white font-bold rounded-lg text-lg" disabled>
+                            🎯 叫地主
+                        </button>
+                        <button id="passCallBtn" class="control-button text-white font-bold rounded-lg text-lg" disabled>
+                            🚫 不叫
+                        </button>
+                        <button id="playCardsBtn" class="control-button text-white font-bold rounded-lg text-lg" disabled>
+                            🃏 出牌
+                        </button>
+                        <button id="passPlayBtn" class="control-button text-white font-bold rounded-lg text-lg" disabled>
+                            ⏭️ 不出
+                        </button>
+                        <button id="hintBtn" class="control-button text-white font-bold rounded-lg text-lg" disabled>
+                            💡 提示
+                        </button>
+                        <button id="startGameBtn" class="control-button text-white font-bold rounded-lg text-lg">
+                            🎮 开始游戏
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏结果弹窗 -->
+    <div id="gameResultModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-8 w-96 border border-yellow-400">
+            <div class="text-center">
+                <div class="text-6xl mb-4" id="resultEmoji">🎉</div>
+                <h3 class="text-white text-3xl font-bold mb-4" id="resultTitle">游戏结束</h3>
+                <div class="text-white text-lg mb-2" id="resultMessage">恭喜您获得胜利！</div>
+                <div class="text-yellow-400 text-sm mb-6" id="resultDetails">本局得分: +100</div>
+                
+                <div class="flex space-x-4">
+                    <button id="playAgainBtn" class="flex-1 bg-yellow-500 text-white py-3 rounded-lg font-bold hover:bg-yellow-600 transition-colors">
+                        再来一局
+                    </button>
+                    <button id="backToMenuBtn" class="flex-1 bg-gray-600 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition-colors">
+                        返回主菜单
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 聊天消息区域 -->
+    <div id="chatArea" class="fixed bottom-4 left-4 space-y-2 z-40">
+        <!-- 聊天消息将通过JavaScript生成 -->
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

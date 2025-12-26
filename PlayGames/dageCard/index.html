@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大哥斗地主 - 经典扑克游戏</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d4a3e 100%);
+            overflow: hidden;
+        }
+        .hero-title {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 900;
+            background: linear-gradient(45deg, #d4af37, #f4e99b, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .menu-button {
+            background: linear-gradient(145deg, #2d4a3e, #1a472a);
+            border: 2px solid #d4af37;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .menu-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.2);
+            border-color: #f4e99b;
+        }
+        .orientation-overlay {
+            background: linear-gradient(135deg, #1a472a 0%, #2d4a3e 100%);
+            z-index: 9999;
+        }
+        .card-decoration {
+            background: linear-gradient(45deg, #8b0000, #d4af37);
+            border-radius: 8px;
+            transform: rotate(15deg);
+        }
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .content-layer {
+            position: relative;
+            z-index: 2;
+        }
+        .stats-panel {
+            background: rgba(26, 71, 42, 0.8);
+            border: 1px solid #d4af37;
+            backdrop-filter: blur(10px);
+        }
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen">
+    <!-- 横屏检测覆盖层 -->
+    <div id="orientationOverlay" class="orientation-overlay fixed inset-0 flex items-center justify-center hidden">
+        <div class="text-center text-white">
+            <div class="text-6xl mb-4">📱</div>
+            <h2 class="text-4xl font-bold mb-4">请换横屏游玩</h2>
+            <p class="text-xl">请将您的设备旋转为横屏模式以获得最佳游戏体验</p>
+            <div class="mt-8">
+                <div class="inline-block animate-spin">🔄</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div id="mainContent" class="h-full w-full flex">
+        <!-- 左侧装饰区域 -->
+        <div class="w-1/4 flex items-center justify-center content-layer">
+            <div class="relative">
+                <div class="card-decoration w-24 h-32 mb-4"></div>
+                <div class="card-decoration w-24 h-32 absolute top-4 left-4 opacity-60"></div>
+                <div class="card-decoration w-24 h-32 absolute top-8 left-8 opacity-30"></div>
+            </div>
+        </div>
+
+        <!-- 中央主菜单区域 -->
+        <div class="w-1/2 flex flex-col items-center justify-center content-layer">
+            <!-- 游戏标题 -->
+            <div class="text-center mb-12">
+                <h1 class="hero-title text-8xl mb-4">大哥斗地主</h1>
+                <p class="text-white text-2xl opacity-80">经典扑克游戏，智慧与运气的较量</p>
+            </div>
+
+            <!-- 主菜单按钮 -->
+            <div class="space-y-6 w-80">
+                <button id="startGameBtn" class="menu-button w-full py-4 text-white text-xl font-bold rounded-lg glow-effect">
+                    🎯 开始游戏
+                </button>
+                <button id="rulesBtn" class="menu-button w-full py-4 text-white text-xl font-bold rounded-lg">
+                    📋 游戏规则
+                </button>
+                <button id="aboutBtn" class="menu-button w-full py-4 text-white text-xl font-bold rounded-lg">
+                    ℹ️ 关于游戏
+                </button>
+                <button id="settingsBtn" class="menu-button w-full py-4 text-white text-xl font-bold rounded-lg">
+                    ⚙️ 游戏设置
+                </button>
+            </div>
+
+            <!-- 版本信息 -->
+            <div class="mt-8 text-white text-sm opacity-60">
+                <p>版本 1.0.0 | 专为横屏设备优化</p>
+            </div>
+        </div>
+
+        <!-- 右侧统计信息区域 -->
+        <div class="w-1/4 flex items-center justify-center content-layer">
+            <div class="stats-panel rounded-lg p-6 w-64">
+                <h3 class="text-white text-xl font-bold mb-4 text-center">📊 游戏统计</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-white">
+                        <span>总局数:</span>
+                        <span id="totalGames" class="font-bold text-yellow-400">0</span>
+                    </div>
+                    <div class="flex justify-between text-white">
+                        <span>胜局数:</span>
+                        <span id="winGames" class="font-bold text-green-400">0</span>
+                    </div>
+                    <div class="flex justify-between text-white">
+                        <span>胜率:</span>
+                        <span id="winRate" class="font-bold text-blue-400">0%</span>
+                    </div>
+                    <div class="flex justify-between text-white">
+                        <span>最高连胜:</span>
+                        <span id="maxStreak" class="font-bold text-purple-400">0</span>
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-yellow-400">
+                    <div class="text-center">
+                        <div class="text-yellow-400 text-lg font-bold">🏆 成就</div>
+                        <div id="achievements" class="text-white text-sm mt-2">
+                            暂无成就
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 粒子效果容器 -->
+    <div id="particleContainer" class="particle-container"></div>
+
+    <!-- 设置弹窗 -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-8 w-96 border border-yellow-400">
+            <h3 class="text-white text-2xl font-bold mb-6 text-center">⚙️ 游戏设置</h3>
+            
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <span class="text-white">🔊 音效</span>
+                    <button id="soundToggle" class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold">
+                        开启
+                    </button>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-white">🎵 背景音乐</span>
+                    <button id="musicToggle" class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold">
+                        开启
+                    </button>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-white">💭 聊天消息</span>
+                    <button id="chatToggle" class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold">
+                        开启
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-8 flex space-x-4">
+                <button id="resetStatsBtn" class="flex-1 bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">
+                    重置统计
+                </button>
+                <button id="closeSettingsBtn" class="flex-1 bg-gray-600 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition-colors">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 屏幕方向检测
+        class ScreenOrientation {
+            constructor() {
+                this.overlay = document.getElementById('orientationOverlay');
+                this.mainContent = document.getElementById('mainContent');
+                this.checkOrientation();
+                this.bindEvents();
+            }
+
+            checkOrientation() {
+                const isLandscape = window.innerWidth > window.innerHeight;
+                if (!isLandscape) {
+                    this.showOverlay();
+                } else {
+                    this.hideOverlay();
+                }
+            }
+
+            showOverlay() {
+                this.overlay.classList.remove('hidden');
+                this.mainContent.classList.add('hidden');
+            }
+
+            hideOverlay() {
+                this.overlay.classList.add('hidden');
+                this.mainContent.classList.remove('hidden');
+            }
+
+            bindEvents() {
+                window.addEventListener('resize', () => this.checkOrientation());
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => this.checkOrientation(), 100);
+                });
+            }
+        }
+
+        // 游戏统计管理
+        class GameStats {
+            constructor() {
+                this.stats = this.loadStats();
+                this.updateDisplay();
+            }
+
+            loadStats() {
+                const defaultStats = {
+                    totalGames: 0,
+                    winGames: 0,
+                    maxStreak: 0,
+                    currentStreak: 0,
+                    achievements: []
+                };
+                return JSON.parse(localStorage.getItem('doudizhu_stats') || JSON.stringify(defaultStats));
+            }
+
+            saveStats() {
+                localStorage.setItem('doudizhu_stats', JSON.stringify(this.stats));
+            }
+
+            updateDisplay() {
+                document.getElementById('totalGames').textContent = this.stats.totalGames;
+                document.getElementById('winGames').textContent = this.stats.winGames;
+                const winRate = this.stats.totalGames > 0 ? Math.round((this.stats.winGames / this.stats.totalGames) * 100) : 0;
+                document.getElementById('winRate').textContent = winRate + '%';
+                document.getElementById('maxStreak').textContent = this.stats.maxStreak;
+                
+                const achievementsDiv = document.getElementById('achievements');
+                if (this.stats.achievements.length === 0) {
+                    achievementsDiv.textContent = '暂无成就';
+                } else {
+                    achievementsDiv.textContent = this.stats.achievements.join(', ');
+                }
+            }
+
+            resetStats() {
+                this.stats = {
+                    totalGames: 0,
+                    winGames: 0,
+                    maxStreak: 0,
+                    currentStreak: 0,
+                    achievements: []
+                };
+                this.saveStats();
+                this.updateDisplay();
+            }
+        }
+
+        // 设置管理
+        class SettingsManager {
+            constructor() {
+                this.settings = this.loadSettings();
+                this.updateUI();
+                this.bindEvents();
+            }
+
+            loadSettings() {
+                const defaultSettings = {
+                    soundEnabled: true,
+                    musicEnabled: true,
+                    chatEnabled: true
+                };
+                return JSON.parse(localStorage.getItem('doudizhu_settings') || JSON.stringify(defaultSettings));
+            }
+
+            saveSettings() {
+                localStorage.setItem('doudizhu_settings', JSON.stringify(this.settings));
+            }
+
+            updateUI() {
+                const soundToggle = document.getElementById('soundToggle');
+                const musicToggle = document.getElementById('musicToggle');
+                const chatToggle = document.getElementById('chatToggle');
+
+                soundToggle.textContent = this.settings.soundEnabled ? '开启' : '关闭';
+                soundToggle.className = this.settings.soundEnabled ? 
+                    'bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold' :
+                    'bg-gray-500 text-white px-4 py-2 rounded-lg font-bold';
+
+                musicToggle.textContent = this.settings.musicEnabled ? '开启' : '关闭';
+                musicToggle.className = this.settings.musicEnabled ? 
+                    'bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold' :
+                    'bg-gray-500 text-white px-4 py-2 rounded-lg font-bold';
+
+                chatToggle.textContent = this.settings.chatEnabled ? '开启' : '关闭';
+                chatToggle.className = this.settings.chatEnabled ? 
+                    'bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold' :
+                    'bg-gray-500 text-white px-4 py-2 rounded-lg font-bold';
+            }
+
+            bindEvents() {
+                document.getElementById('soundToggle').addEventListener('click', () => {
+                    this.settings.soundEnabled = !this.settings.soundEnabled;
+                    this.saveSettings();
+                    this.updateUI();
+                });
+
+                document.getElementById('musicToggle').addEventListener('click', () => {
+                    this.settings.musicEnabled = !this.settings.musicEnabled;
+                    this.saveSettings();
+                    this.updateUI();
+                });
+
+                document.getElementById('chatToggle').addEventListener('click', () => {
+                    this.settings.chatEnabled = !this.settings.chatEnabled;
+                    this.saveSettings();
+                    this.updateUI();
+                });
+            }
+        }
+
+        // 粒子效果
+        class ParticleEffect {
+            constructor(container) {
+                this.container = container;
+                this.particles = [];
+                this.init();
+            }
+
+            init() {
+                // 使用p5.js创建粒子效果
+                new p5((p) => {
+                    p.setup = () => {
+                        const canvas = p.createCanvas(window.innerWidth, window.innerHeight);
+                        canvas.parent(this.container);
+                        canvas.style('position', 'absolute');
+                        canvas.style('top', '0');
+                        canvas.style('left', '0');
+                        canvas.style('pointer-events', 'none');
+                        
+                        // 初始化粒子
+                        for (let i = 0; i < 50; i++) {
+                            this.particles.push({
+                                x: p.random(p.width),
+                                y: p.random(p.height),
+                                size: p.random(2, 6),
+                                speedX: p.random(-0.5, 0.5),
+                                speedY: p.random(-0.5, 0.5),
+                                opacity: p.random(0.3, 0.8)
+                            });
+                        }
+                    };
+
+                    p.draw = () => {
+                        p.clear();
+                        
+                        // 绘制粒子
+                        this.particles.forEach(particle => {
+                            p.fill(212, 175, 55, particle.opacity * 255);
+                            p.noStroke();
+                            p.ellipse(particle.x, particle.y, particle.size);
+                            
+                            // 更新粒子位置
+                            particle.x += particle.speedX;
+                            particle.y += particle.speedY;
+                            
+                            // 边界检查
+                            if (particle.x < 0 || particle.x > p.width) particle.speedX *= -1;
+                            if (particle.y < 0 || particle.y > p.height) particle.speedY *= -1;
+                        });
+                    };
+
+                    p.windowResized = () => {
+                        p.resizeCanvas(window.innerWidth, window.innerHeight);
+                    };
+                });
+            }
+        }
+
+        // 主应用类
+        class MainApp {
+            constructor() {
+                this.screenOrientation = new ScreenOrientation();
+                this.gameStats = new GameStats();
+                this.settingsManager = new SettingsManager();
+                this.particleEffect = new ParticleEffect('particleContainer');
+                this.bindEvents();
+                this.initAnimations();
+            }
+
+            bindEvents() {
+                // 开始游戏按钮
+                document.getElementById('startGameBtn').addEventListener('click', () => {
+                    this.startGame();
+                });
+
+                // 游戏规则按钮
+                document.getElementById('rulesBtn').addEventListener('click', () => {
+                    window.location.href = 'rules.html';
+                });
+
+                // 关于游戏按钮
+                document.getElementById('aboutBtn').addEventListener('click', () => {
+                    window.location.href = 'about.html';
+                });
+
+                // 设置按钮
+                document.getElementById('settingsBtn').addEventListener('click', () => {
+                    document.getElementById('settingsModal').classList.remove('hidden');
+                });
+
+                // 关闭设置按钮
+                document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+                    document.getElementById('settingsModal').classList.add('hidden');
+                });
+
+                // 重置统计按钮
+                document.getElementById('resetStatsBtn').addEventListener('click', () => {
+                    if (confirm('确定要重置所有游戏统计吗？此操作不可撤销。')) {
+                        this.gameStats.resetStats();
+                    }
+                });
+            }
+
+            startGame() {
+                // 添加按钮点击动画
+                anime({
+                    targets: '#startGameBtn',
+                    scale: [1, 0.95, 1],
+                    duration: 200,
+                    easing: 'easeInOutQuad',
+                    complete: () => {
+                        window.location.href = 'game.html';
+                    }
+                });
+            }
+
+            initAnimations() {
+                // 标题动画
+                anime({
+                    targets: '.hero-title',
+                    scale: [0.8, 1],
+                    opacity: [0, 1],
+                    duration: 1000,
+                    easing: 'easeOutElastic(1, .8)'
+                });
+
+                // 菜单按钮动画
+                anime({
+                    targets: '.menu-button',
+                    translateY: [50, 0],
+                    opacity: [0, 1],
+                    duration: 800,
+                    delay: anime.stagger(100),
+                    easing: 'easeOutExpo'
+                });
+
+                // 统计面板动画
+                anime({
+                    targets: '.stats-panel',
+                    scale: [0.9, 1],
+                    opacity: [0, 1],
+                    duration: 1000,
+                    delay: 500,
+                    easing: 'easeOutExpo'
+                });
+            }
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            new MainApp();
+        });
+    </script>
+</body>
+</html>
