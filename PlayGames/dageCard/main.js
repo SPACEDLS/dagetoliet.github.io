@@ -845,7 +845,7 @@ class DouDiZhuGame {
 }
 
 // 屏幕方向检测
-class ScreenOrientation {
+/** class ScreenOrientation {
     constructor() {
         this.overlay = document.getElementById('orientationOverlay');
         this.gameContent = document.getElementById('gameContent');
@@ -879,7 +879,7 @@ class ScreenOrientation {
         });
     }
 }
-
+**/
 // 初始化游戏
 document.addEventListener('DOMContentLoaded', () => {
     new ScreenOrientation();
