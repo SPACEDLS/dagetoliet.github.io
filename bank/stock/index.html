@@ -38,6 +38,16 @@
             font-weight: bold;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+              .header-top {
+            background-color: #c7c7c7f3;
+            color: #000;
+            padding: 10px 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+  
         /* 股票概览 */
         .stock-header {
             padding: 25px 15px;
@@ -82,6 +92,13 @@
             border-color: var(--gold-color) !important;
             color: white !important;
         }
+            .btn-primary {
+            width: 100%;
+            height: 50px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    
         .btn-gold:hover {
             background-color: var(--gold-hover) !important;
         }
@@ -96,8 +113,17 @@
 </head>
 <body>
     <div id="app">
+              <div class="header-top">
+          <p style=" margin:0;font-size:10px;font-weight:300;">
+            <el-avatar size="small"> 大 </el-avatar>
+ 
+ 你好，大哥
+ </div>
+
         <div class="header">
-          <p style=" margin:0;font-size:24px;font-weight:300;">大哥国际银行</p>
+          <p style=" margin:0;font-size:24px;font-weight:300;">
+            
+大哥国际银行</p>
             {{ stockInfo.stockName || '加载中...' }}({{ stockInfo.symbol || '----' }})
         </div>
 
@@ -107,8 +133,9 @@
                 <span>{{ stockInfo.changeAmount }}</span>
                 <span style="margin-left: 10px;">{{ stockInfo.changePercent }}</span>
                 <span style="margin-left: 10px;">{{ stockInfo.status }}</span>
-                   <span style="margin-left: 10px;">{{ stockInfo.text }}</span>
+               <br>    <span style="margin-left: 10px;">建议：{{ stockInfo.text }}</span>
             
+     <br> <br>          <el-button size="small">换一个</el-button>
             </div>
         </div>
 
@@ -118,7 +145,9 @@
 
         <div class="footer-action">
             <el-button class="btn-gold" @click="dialogVisible = true">投股</el-button>
-     <p style="text-align:center;color:#dcdcdcf3;font-size:15px;">站点练习 仅供娱乐 请勿当真
+            
+  <br> <el-button style="margin-top:5px;" class="btn-primary" @click="sellit = true">卖出</el-button>
+     <p style="text-align:center;color:#dcdcdcf3;font-size:15px;">数据来自{{stockInfo.pl}}<br>站点练习 仅供娱乐 请勿当真
      <br>本站投资无风险因为不要钱</p>
         </div>
 
@@ -133,6 +162,20 @@
                 <el-button type="primary" color="#d4af37" @click="handleConfirmBuy">提交</el-button>
             </template>
         </el-dialog>
+        
+        <el-dialog v-model="sellit" title="卖出" width="90%" align-center>
+          <p>持有金额：{{moneys}}</p>
+            <el-form label-position="top">
+                <el-form-item label="请输入卖出金额 (CNY)">
+                    <el-input v-model="SellAmount" placeholder="请输入数字" type="text" clearable></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <el-button @click="sellit = false">取消</el-button>
+                <el-button type="primary" color="#d4af37" @click="handleConfirmSell">提交</el-button>
+            </template>
+        </el-dialog>
+    
     </div>
 
     <script>
@@ -141,10 +184,14 @@
 
         createApp({
             setup() {
+              const moneys = ref('0');
                 const loading = ref(true);
                 const stockInfo = ref({});
                 const dialogVisible = ref(false);
                 const buyAmount = ref('');
+                  const sellit = ref(false);
+                const SellAmount = ref('');
+              
                 let chartInstance = null;
 
                 // 初始化ECharts K线图
@@ -222,7 +269,7 @@
                         ElMessage.warning('金额格式不正确，请输入有效的数字');
                         return;
                     }
-
+moneys.value = moneys*amount;
                     ElMessage.success({
                         message: '买入成功！',
                         offset: 100
@@ -231,6 +278,27 @@
                     buyAmount.value = '';
                 };
 
+                const handleConfirmSell = () => {
+                    const amount = SellAmount.value.trim();
+                    const reg = /^[0-9]+(.[0-9]{1,2})?$/; // 数字正则
+
+                    if (!amount) {
+                        ElMessage.warning('请输入金额');
+                        return;
+                    }
+                    if (!reg.test(amount)) {
+                        ElMessage.warning('金额格式不正确，请输入有效的数字');
+                        return;
+                    }
+
+                    ElMessage.success({
+                        message: '卖出成功',
+                        offset: 100
+                    });
+                    sellit.value = false;
+                    SellAmount.value = '';
+                };
+                
                 onMounted(() => {
                     loadData();
                     // 窗口缩放自适应
@@ -238,11 +306,15 @@
                 });
 
                 return {
+                  moneys,
                     loading,
                     stockInfo,
                     dialogVisible,
                     buyAmount,
-                    handleConfirmBuy
+                    handleConfirmBuy,
+                    SellAmount,
+                    sellit,
+                    handleConfirmSell
                 };
             }
         }).use(ElementPlus).mount('#app');
