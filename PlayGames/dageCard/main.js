@@ -11,14 +11,14 @@ class Card {
 
     getDisplayText() {
         if (this.rank === '小王') return '🃏';
-        if (this.rank === '大王') return '🃟';
+        if (this.rank === '大王') return '🃏';
         return this.suit + this.rank;
     }
 
     getColor() {
         if (this.suit === '♥' || this.suit === '♦') return 'text-red-500';
         if (this.suit === '♠' || this.suit === '♣') return 'text-gray-900';
-        return 'text-red-600'; // 王
+        return 'text-yellow-500'; // 王
     }
 
     getNumericValue() {
@@ -663,225 +663,69 @@ class DouDiZhuGame {
     }
 
     updatePlayerCards() {
-        this.players.forEach((player, index) => {
-            const countEl = document.getElementById(`player${index === 0 ? '' : (index === 1 ? 'ai1' : 'ai2')}Cards`);
-            if (countEl) {
-                countEl.textContent = player.getCardCount();
-            }
-
-            // 更新手牌显示
-            const handEl = document.getElementById(index === 0 ? 'playerHand' : (index === 1 ? 'ai1Hand' : 'ai2Hand'));
-            if (handEl) {
-                handEl.innerHTML = '';
-                
-                if (player.type === 'human') {
-                    // 显示玩家手牌
-                    player.hand.forEach((card, cardIndex) => {
-                        const cardEl = this.createCardElement(card, cardIndex, true);
-                        handEl.appendChild(cardEl);
-                    });
-                } else {
-                    // 显示AI手牌背面
-                    for (let i = 0; i < player.hand.length; i++) {
-                        const cardBack = document.createElement('div');
-                        cardBack.className = 'card card-back w-8 h-12';
-                        handEl.appendChild(cardBack);
-                    }
-                }
-            }
-        });
+        const playerHand = document.getElementById('playerHand');
+        if (playerHand) {
+            playerHand.innerHTML = '';
+            this.players[0].hand.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.classList.add('card', card.getColor(), 'inline-block', 'p-2', 'm-1', 'rounded', 'shadow');
+                cardEl.textContent = card.getDisplayText();
+                playerHand.appendChild(cardEl);
+            });
+        }
     }
 
     updateLandlordCards() {
-        const landlordEl = document.getElementById('landlordCards');
-        if (landlordEl) {
-            landlordEl.innerHTML = '';
-            
-            if (this.gameState === 'playing' || this.landlordCards.length > 0) {
-                this.landlordCards.forEach(card => {
-                    const cardEl = this.createCardElement(card, 0, false);
-                    cardEl.classList.add('w-8', 'h-12');
-                    landlordEl.appendChild(cardEl);
-                });
-            } else {
-                // 显示背面
-                for (let i = 0; i < 3; i++) {
-                    const cardBack = document.createElement('div');
-                    cardBack.className = 'card card-back w-8 h-12';
-                    landlordEl.appendChild(cardBack);
-                }
-            }
+        const landlordCardsEl = document.getElementById('landlordCards');
+        if (landlordCardsEl) {
+            landlordCardsEl.innerHTML = '';
+            this.landlordCards.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.classList.add('card', card.getColor(), 'inline-block', 'p-2', 'm-1', 'rounded', 'shadow');
+                cardEl.textContent = card.getDisplayText();
+                landlordCardsEl.appendChild(cardEl);
+            });
         }
     }
 
     updateGameInfo() {
-        const roundEl = document.getElementById('gameRound');
-        const landlordEl = document.getElementById('landlordName');
-        const multiplierEl = document.getElementById('gameMultiplier');
-        const currentPlayerEl = document.getElementById('currentPlayer');
-
-        if (roundEl) roundEl.textContent = '1'; // 可以添加多局支持
-        if (landlordEl) {
-            landlordEl.textContent = this.landlordIndex >= 0 ? this.players[this.landlordIndex].name : '待定';
+        const gameInfoEl = document.getElementById('gameInfo');
+        if (gameInfoEl) {
+            gameInfoEl.innerHTML = `
+                <p>玩家手牌数: ${this.players[0].getCardCount()}</p>
+                <p>地主手牌数: ${this.players[this.landlordIndex].getCardCount()}</p>
+            `;
         }
-        if (multiplierEl) multiplierEl.textContent = '1'; // 可以添加倍数计算
-        if (currentPlayerEl) {
-            currentPlayerEl.textContent = this.gameState === 'playing' ? 
-                `${this.players[this.currentPlayerIndex].name}的回合` : '等待游戏开始...';
-        }
-    }
-
-    createCardElement(card, index, isClickable = false) {
-        const cardEl = document.createElement('div');
-        cardEl.className = `card w-12 h-16 flex items-center justify-center text-lg font-bold ${card.getColor()}`;
-        cardEl.textContent = card.getDisplayText();
-        cardEl.dataset.cardId = card.id;
-        cardEl.dataset.cardIndex = index;
-
-        if (isClickable) {
-            cardEl.style.cursor = 'pointer';
-            cardEl.addEventListener('click', () => this.toggleCardSelection(cardEl, card));
-        }
-
-        return cardEl;
-    }
-
-    toggleCardSelection(cardEl, card) {
-        const isSelected = cardEl.classList.contains('selected');
-        
-        if (isSelected) {
-            cardEl.classList.remove('selected');
-            this.selectedCards = this.selectedCards.filter(c => c.id !== card.id);
-        } else {
-            cardEl.classList.add('selected');
-            this.selectedCards.push(card);
-        }
-
-        this.updateButtons();
     }
 
     bindEvents() {
-        // 开始游戏按钮
         document.getElementById('startGameBtn').addEventListener('click', () => {
             this.startGame();
         });
 
-        // 叫地主按钮
         document.getElementById('callLandlordBtn').addEventListener('click', () => {
-            if (this.currentPlayerIndex === 0) {
-                this.callLandlord(0);
-            }
+            this.callLandlord(0);
         });
 
-        // 不叫按钮
         document.getElementById('passCallBtn').addEventListener('click', () => {
-            if (this.currentPlayerIndex === 0) {
-                this.passCall();
-            }
+            this.passCall();
         });
 
-        // 出牌按钮
         document.getElementById('playCardsBtn').addEventListener('click', () => {
-            if (this.selectedCards.length > 0) {
-                this.playCards(0, this.selectedCards);
-                this.selectedCards = [];
-                this.updatePlayerCards();
-            }
+            this.playCards(0, this.selectedCards);
         });
 
-        // 不出按钮
         document.getElementById('passPlayBtn').addEventListener('click', () => {
             this.passPlay(0);
         });
 
-        // 提示按钮
         document.getElementById('hintBtn').addEventListener('click', () => {
-            this.showHint();
-        });
-
-        // 返回按钮
-        document.getElementById('backBtn').addEventListener('click', () => {
-            if (confirm('确定要返回主菜单吗？当前游戏进度将丢失。')) {
-                window.location.href = 'index.html';
-            }
-        });
-
-        // 游戏结果弹窗按钮
-        document.getElementById('playAgainBtn').addEventListener('click', () => {
-            document.getElementById('gameResultModal').classList.add('hidden');
-            this.startGame();
-        });
-
-        document.getElementById('backToMenuBtn').addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
-    }
-
-    showHint() {
-        // 简单的提示功能：找出能压过上家的最小牌型
-        if (this.lastPattern && this.lastPattern.type !== CardPattern.TYPES.NULL) {
-            const player = this.players[0];
-            const possiblePlays = [];
-
-            // 检查所有可能的单张
-            player.hand.forEach(card => {
-                const pattern = CardPattern.analyze([card]);
-                if (CardPattern.canBeat(pattern, this.lastPattern)) {
-                    possiblePlays.push(pattern);
-                }
-            });
-
-            if (possiblePlays.length > 0) {
-                // 选择最小的牌
-                possiblePlays.sort((a, b) => a.value - b.value);
-                this.showMessage(`提示: 可以出 ${possiblePlays[0].cards[0].getDisplayText()}`);
-            } else {
-                this.showMessage('提示: 没有能压过的牌，建议不出');
-            }
-        } else {
-            this.showMessage('提示: 您可以出任意牌型');
-        }
-    }
-}
-
-// 屏幕方向检测
-/** class ScreenOrientation {
-    constructor() {
-        this.overlay = document.getElementById('orientationOverlay');
-        this.gameContent = document.getElementById('gameContent');
-        this.checkOrientation();
-        this.bindEvents();
-    }
-**/
-    checkOrientation() {
-        const isLandscape = window.innerWidth > window.innerHeight;
-        if (!isLandscape) {
-            this.showOverlay();
-        } else {
-            this.hideOverlay();
-        }
-    }
-
-    showOverlay() {
-        this.overlay.classList.remove('hidden');
-        this.gameContent.classList.add('hidden');
-    }
-
-    hideOverlay() {
-        this.overlay.classList.add('hidden');
-        this.gameContent.classList.remove('hidden');
-    }
-
-    bindEvents() {
-        window.addEventListener('resize', () => this.checkOrientation());
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => this.checkOrientation(), 100);
+            this.showMessage('提示功能暂未实现');
         });
     }
 }
 
 // 初始化游戏
 document.addEventListener('DOMContentLoaded', () => {
-    new ScreenOrientation();
-    window.game = new DouDiZhuGame();
+    new DouDiZhuGame();
 });
