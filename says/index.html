@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大哥伪人名言</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/naive-ui@2.34.4/dist/index.prod.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #fafafc;
+            font-family: 'Noto Serif SC', serif;
+        }
+        /* 主内容居中 */
+        .quote-container {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            text-align: center;
+        }
+        /* 大哥金名言样式 */
+        .main-quote {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #d4af37;
+            margin-bottom: 40px;
+            min-height: 1.5em;
+            transition: opacity 0.3s ease;
+        }
+        /* 侧边栏卡片滚动优化 */
+        .drawer-content {
+            padding: 12px;
+        }
+        .quote-card {
+            margin-bottom: 16px;
+            border-left: 4px solid #d4af37;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <n-config-provider :theme-overrides="themeOverrides">
+        <n-layout style="height: 100vh">
+            <n-layout-header bordered style="padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;">
+                <n-space align="center">
+                    <n-button quaternary circle size="large" @click="showDrawer = true">
+                        <template #icon>☰</template>
+                    </n-button>
+                    <n-h2 style="margin: 0; color: #d4af37; letter-spacing: 2px;">大哥名言🤣</n-h2>
+                </n-space>
+                    <n-button 
+                        tag="a"
+    href="https://github.com/CHEN-EXE/dagetoliet.github.io/"
+ 
+ quaternary circle>
+      <template #icon>
+              <svg xmlns="http://www.w3.org/2000/svg" height="20" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5C64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9c26.4 39.1 77.9 32.5 104 26c5.7-23.5 17.9-44.5 34.7-60.8c-140.6-25.2-199.2-111-199.2-213c0-49.5 16.3-95 48.3-131.7c-20.4-60.5 1.9-112.3 4.9-120c58.1-5.2 118.5 41.6 123.2 45.3c33-8.9 70.7-13.6 112.9-13.6c42.4 0 80.2 4.9 113.5 13.9c11.3-8.6 67.3-48.8 121.3-43.9c2.9 7.7 24.7 58.3 5.5 118c32.4 36.8 48.9 82.7 48.9 132.3c0 102.2-59 188.1-200 212.9a127.5 127.5 0 0 1 38.1 91v112.5c.8 9 0 17.9 15 17.9c177.1-59.7 304.6-227 304.6-424.1c0-247.2-200.4-447.3-447.5-447.3z" fill="currentColor"></path></svg>
+              </template>
+              </n-button>
+            </n-layout-header>
+
+            <n-layout-content content-style="padding: 24px;">
+                <div class="quote-container">
+                    <div class="main-quote" :style="{ opacity: isChanging ? 0 : 1 }">
+                        「 {{ currentQuote.content || '正在加载' }} 」
+                    </div>
+                    <n-button 
+                        type="primary" 
+                        size="large" 
+                        round 
+                        ghost 
+                        icon-placement="right"
+                        @click="refreshQuote"
+                        :loading="loading"
+                    >
+                        换一个
+                        <template #icon>⚡</template>
+                    </n-button>
+                </div>
+            </n-layout-content>
+
+            <n-layout-footer position="absolute" style="bottom: 0; padding: 20px; text-align: center;">
+                <n-text depth="3">© 2026 大哥国际 出土时间5202</n-text>
+            </n-layout-footer>
+        </n-layout>
+
+        <n-drawer v-model:show="showDrawer" :width="350" placement="left">
+            <n-drawer-content title="名言列表" closable>
+              
+                <div class="drawer-content">
+                  <n-alert style="margin-bottom:5px;" title="可自己改" type="info" closable>
+      修改  <n-button
+    text
+    tag="a"
+    href="https://github.com/CHEN-EXE/dagetoliet.github.io/"
+    target="_blank"
+    type="primary"
+  >
+    点我
+  </n-button>/says/dage.json 即可。前提是你得有github账号。(中国移动用户可能打不开，用点小方法
+    </n-alert>
+    
+    <n-alert style="margin-bottom:10px;" :show-icon="false" closable>
+    部分名言存在隐私内容，已作替换处理。
+  </n-alert>
+    
+                    <n-card 
+                        v-for="(item, index) in allQuotes" 
+                        :key="index" 
+                        size="small" 
+                        class="quote-card"
+                        hoverable
+                    >
+                        {{ item.content }}
+                    </n-card>
+                </div>
+            </n-drawer-content>
+        </n-drawer>
+
+    </n-config-provider>
+</div>
+
+<script>
+    const { createApp, ref, onMounted } = Vue;
+
+    const app = createApp({
+        setup() {
+            const allQuotes = ref([]);
+            const currentQuote = ref({});
+            const showDrawer = ref(false);
+            const loading = ref(true);
+            const isChanging = ref(false);
+
+            // 统一品牌颜色：大哥金
+            const themeOverrides = {
+                common: {
+                    primaryColor: '#d4af37',
+                    primaryColorHover: '#e5c158',
+                    primaryColorPressed: '#b8860b',
+                    baseColor: '#fafafc'
+                },
+                Button: {
+                    borderRadiusMedium: '8px'
+                }
+            };
+
+            // 获取名言数据
+            const fetchQuotes = async () => {
+                try {
+                    // 这里假设 dage.json 在同级目录下
+                    const response = await fetch('dage.json');
+                    const data = await response.json();
+                    allQuotes.value = data;
+                    getRandomQuote();
+                } catch (error) {
+                    console.error('加载失败:', error);
+                    allQuotes.value = [{ content: "卡在这里了" }];
+                    getRandomQuote();
+                } finally {
+                    loading.value = false;
+                }
+            };
+
+            // 随机抽取
+            const getRandomQuote = () => {
+                if (allQuotes.value.length === 0) return;
+                isChanging.value = true;
+                
+                // 延迟切换效果，增加仪式感
+                setTimeout(() => {
+                    const randomIndex = Math.floor(Math.random() * allQuotes.value.length);
+                    currentQuote.value = allQuotes.value[randomIndex];
+                    isChanging.value = false;
+                }, 200);
+            };
+
+            const refreshQuote = () => {
+                getRandomQuote();
+            };
+
+            onMounted(fetchQuotes);
+
+            return {
+                allQuotes,
+                currentQuote,
+                showDrawer,
+                loading,
+                isChanging,
+                themeOverrides,
+                refreshQuote
+            };
+        }
+    });
+
+    app.use(naive);
+    app.mount('#app');
+</script>
+</body>
+</html>
