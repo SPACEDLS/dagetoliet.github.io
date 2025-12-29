@@ -4,429 +4,242 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大哥国际餐馆 - 尊贵点餐系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/naive-ui@2.34.4/dist/index.prod.js"></script>
+
     <style>
-        /* 全局样式重置 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f9f9fb;
         }
-
-        /* 头部样式 */
-        header {
-            background-color:#d4af37;
-            color: #ecf0f1;
-            padding: 2rem 0;
+        .header-banner {
+          
+            background: url(https://cdn.pixabay.com/photo/2020/03/13/08/34/south-station-4927286_1280.jpg);
+            background-position: center center;
+  background-size: cover;
+            color: white;
+            padding: 40px 20px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 2px;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            color: #fff;
-        }
-
-        /* 主容器布局 */
-        .container {
-            display: flex;
+        .main-container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            gap: 2rem;
-            flex-wrap: wrap; /* 适配移动端 */
+            margin: -30px auto 40px;
+            padding: 0 20px;
         }
-
-        /* 菜单区域 */
-        .menu-section {
-            flex: 2; /* 占据2/3宽度 */
-            min-width: 300px;
-        }
-
-        .section-title {
-            border-left: 5px solid #d4af37;
-            padding-left: 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .menu-item {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
-
-        .menu-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .item-img {
-            height: 150px;
-            background-color: #ddd;
+        .item-icon {
+            font-size: 40px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-        }
-
-        .item-details {
-            padding: 1rem;
-        }
-
-        .item-name {
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .item-desc {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 1rem;
-            height: 40px; /* 固定高度防止错位 */
-        }
-
-        .item-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .price {
-            color: #d4af37;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .add-btn {
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .add-btn:hover {
-            background-color: #d4af37;
-        }
-
-        /* 购物车侧边栏 */
-        .cart-section {
-            flex: 1; /* 占据1/3宽度 */
-            min-width: 300px;
-            background: white;
-            padding: 1.5rem;
+            background: #fdfaf2;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            height: fit-content;
+            margin-bottom: 12px;
+        }
+        .sticky-cart {
             position: sticky;
             top: 20px;
         }
-
-        .cart-items {
-            list-style: none;
-            margin-bottom: 1.5rem;
-            border-top: 1px solid #eee;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .cart-item-info h4 {
-            font-size: 1rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .cart-item-controls button {
-            width: 25px;
-            height: 25px;
-            border: 1px solid #ddd;
-            background: #f9f9f9;
-            cursor: pointer;
-        }
-
-        .cart-total {
-            font-size: 1.5rem;
-            text-align: right;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            padding: 1rem;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .checkout-btn:hover {
-            background-color: #c0392b;
-        }
-
-        /* 页脚 */
         footer {
+            padding: 40px;
             text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            background-color: #2c3e50;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-
-        /* 弹窗样式 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            width: 300px;
+            color: #999;
+            background: #1a1a1a;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h2>大哥国际餐馆点菜系统</h2>
-        <p></p>
-        <p style="font-size: 0.8rem; margin-top: 5px;">
-       大哥VIP公共厕所旁边大哥国际餐馆店<br>当前位置：1号 | 欢迎点餐！
-    <a onclick="arrow()" > <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#ffffff" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h8.925l-2 2H5v14h14v-6.95l2-2V19q0 .825-.587 1.413T19 21zm4-6v-4.25l9.175-9.175q.3-.3.675-.45t.75-.15q.4 0 .763.15t.662.45L22.425 3q.275.3.425.663T23 4.4t-.137.738t-.438.662L13.25 15zM21.025 4.4l-1.4-1.4zM11 13h1.4l5.8-5.8l-.7-.7l-.725-.7L11 11.575zm6.5-6.5l-.725-.7zl.7.7z"/></svg>编辑</a>
-     <a onclick="loader()" ><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#ffffff" d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 0 0-8 8a8 8 0 0 0 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18a6 6 0 0 1-6-6a6 6 0 0 1 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg>刷新</a></p>
-    </header>
+<div id="app">
+    <n-config-provider :theme-overrides="themeOverrides">
+        <div class="header-banner">
+            <n-h1 style="color: white; margin: 0; font-weight: 600;">大哥国际餐馆</n-h1>
+            <n-p  style="color:#fff;opacity: 0.9;">大哥VIP公共厕所旁分店</n-p>
+            <n-space justify="center" style="margin-top: 15px;">
+                <n-button color="#fff" strong secondary   size="small" @click="showEditModal = true">
+                    <template #icon><n-icon><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><g fill="none"><path d="M21.03 2.97a3.578 3.578 0 0 1 0 5.06l-2.644 2.645a6.45 6.45 0 0 0-1.579-.543L17.94 9L15 6.06L5.062 16a.75.75 0 0 0-.193.333l-1.05 3.85l3.85-1.05A.75.75 0 0 0 8 18.938l1.13-1.13c.114.555.298 1.085.543 1.579l-.612.612a2.25 2.25 0 0 1-.999.58l-5.116 1.395a.75.75 0 0 1-.92-.921l1.395-5.116a2.25 2.25 0 0 1 .58-.999L15.97 2.97a3.578 3.578 0 0 1 5.06 0zM15.5 11c.293 0 .58.025.86.072l.174.716a2 2 0 0 0 2.413 1.475l.098-.026l.601-.179c.363.467.653.997.854 1.57l-.447.431a2 2 0 0 0-.17 2.699l.142.157l.475.457c-.2.573-.49 1.102-.853 1.57l-.602-.179a2 2 0 0 0-2.485 1.352l-.026.098l-.173.716a5.18 5.18 0 0 1-1.723 0l-.172-.716a2 2 0 0 0-2.413-1.476l-.098.026l-.602.178a5.549 5.549 0 0 1-.853-1.57l.447-.43a2 2 0 0 0 .055-2.827l-.055-.055l-.447-.43c.2-.574.49-1.103.853-1.57l.602.178a2 2 0 0 0 2.485-1.351l.026-.098l.172-.716c.28-.047.569-.072.862-.072zm0 4c-.8 0-1.45.672-1.45 1.5c0 .829.65 1.5 1.45 1.5c.8 0 1.45-.671 1.45-1.5c0-.828-.65-1.5-1.45-1.5zm1.53-10.97l-.97.97L19 7.94l.97-.97a2.078 2.078 0 1 0-2.94-2.94z" fill="currentColor"></path></g></svg></n-icon></template>编辑
+                    </n-button>
+                <n-button color="#fff" strong secondary size="small" @click="fetchMenu" :loading="loading">
+                    <template #icon><n-icon><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4"></path><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></g></svg></n-icon></template>刷新
+                </n-button>
+            </n-space>
+        </div>
 
+        <main class="main-container">
+            <n-grid x-gap="24" :cols="12" item-responsive>
+                <n-gi span="12 m:8">
+                    <n-card title="菜单" :bordered="false" size="large">
+                     
+                        <n-empty v-if="menuItems.length === 0" description="菜单加载中..." style="padding: 40px;"></n-empty>
+                        
+                        <n-grid x-gap="16" y-gap="16" cols="1 s:2 m:2 l:3" responsive="screen">
+                            <n-gi v-for="item in menuItems" :key="item.id">
+                                <n-card hoverable>
+                                    <div class="item-icon">{{ item.icon }}</div>
+                                    <n-text strong style="font-size: 1.1rem;">{{ item.name }}
+                                    <n-tag :bordered="false" type="warning">
+      HOT
+    </n-tag></n-text><br/>
+                                    <n-text depth="3" style="font-size: 0.85rem; height: 40px; display: block; margin-top: 4px;">
+                                        {{ item.desc }}
+                                    </n-text>
+                                    <template #footer>
+                                        <n-space align="center" justify="space-between">
+                                            <n-text type="warning" strong style="font-size: 1.2rem;">¥{{ item.price }}</n-text>
+                                            <n-button secondary type="primary" size="small" @click="addToCart(item)">
+                                                添加到菜单
+                                            </n-button>
+                                        </n-space>
+                                    </template>
+                                </n-card>
+                            </n-gi>
+                        </n-grid>
+                    </n-card>
+                </n-gi>
 
+                <n-gi span="12 m:4">
+                    <div class="sticky-cart">
+                        <n-card title="当前账单" head-style="font-weight: bold;">
+                            <div v-if="Object.keys(cart).length === 0" style="text-align: center; padding: 20px 0;">
+                                <n-text depth="3">
+                                  <n-empty description="大哥，你还没点菜">
+  </n-empty>
+                                </n-text>
+                            </div>
+                            
+                            <n-list v-else>
+                                <n-list-item v-for="(item, id) in cart" :key="id">
+                                    <n-thing :title="item.name">
+                                        <template #description>
+                                            <n-text depth="3">单价: ¥{{ item.price }}</n-text>
+                                        </template>
+                                    </n-thing>
+                                    <template #suffix>
+                                        <n-space align="center">
+                                            <n-button circle size="tiny" @click="changeQty(id, -1)">-</n-button>
+                                            <n-text strong>{{ item.qty }}</n-text>
+                                            <n-button circle size="tiny" @click="changeQty(id, 1)">+</n-button>
+                                        </n-space>
+                                    </template>
+                                </n-list-item>
+                            </n-list>
 
-    <div class="container">
-         
-        <main class="menu-section">
-            <h2 class="section-title">菜单</h2>
-            <div class="menu-grid" id="menu-container">
-                </div>
+                            <template #action>
+                                <n-statistic label="合计" :value="totalPrice" style="margin-bottom: 15px;">
+                                    <template #prefix>¥</template>
+                                </n-statistic>
+                                <n-button block type="error" size="large" @click="checkout" :disabled="totalPrice === 0">
+                                    立即下单
+                                </n-button>
+                            </template>
+                        </n-card>
+                    </div>
+                </n-gi>
+            </n-grid>
         </main>
 
-        <aside class="cart-section">
-            <h2 class="section-title">当前账单</h2>
-          
-            <div id="cart-empty-msg" style="text-align: center; color: #999; padding: 2rem 0;">
-                大哥，您还没点菜呢
+        <footer>
+            <p>© 2026-11451 大哥国际餐馆 & 大哥国际厕所集团</p>
+            <p style="font-size: 12px; margin-top: 10px;">本站点仅供娱乐，梗概不对外公开。</p>
+        </footer>
+
+        <n-modal v-model:show="showOrderModal" preset="dialog" type="success" title="下单成功" positive-text="打印小票" @positive-click="clearCart">
+            <div style="text-align: center; padding: 20px 0;">
+                <n-h2>号码 DG-{{ Math.floor(Math.random()*900 + 100) }}</n-h2>
+                <p>请在大哥VIP厕所门口耐心等待，预计等待 114514 秒。</p>
             </div>
-            <ul class="cart-items" id="cart-list">
-                </ul>
-            <div class="cart-total">
-                总计: <span style="color: #e74c3c;">¥<span id="total-price">0</span></span>
-            </div>
-            <button class="checkout-btn" onclick="checkout()">立即下单</button>
-        </aside>
-    </div>
+        </n-modal>
 
-      <div id="orderModal" class="modal">
-          <div class="modal-content">
-              <div style="font-size: 3rem; margin-bottom: 1rem;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#059669" fill-rule="evenodd" d="M23 12c0 6.075-4.925 11-11 11S1 18.075 1 12S5.925 1 12 1s11 4.925 11 11M7 13l1.5-1.5l2 2l5-5L17 10l-6.5 6.5z" clip-rule="evenodd"/></svg></div>
-              <h3 id="modal-title">下单成功 请等待上菜</h3>
-              <p id="modal-msg" style="margin: 1rem 0;">号码 DG-250<br>您前面还有 Null 个人用餐，预计等待 - 。</p>
-              <button onclick="closeModal()" class="add-btn" style="width: 100%;">打印</button>
-          </div>
-      </div>
+        <n-modal v-model:show="showEditModal" preset="card" title="如何修改菜单？" style="width: 400px;">
+            <p>请前往 GitHub 仓库修改 <code>Foods.json</code> 文件。</p>
+            <n-button style="width:50%;" tag="a" href="https://github.com/CHEN-EXE/dagetoliet.github.io/" target="_blank" block type="primary">前往仓库</n-button>
+        </n-modal>
 
-  <div id="pass" class="modal">
-        <div class="modal-content">
-        
-            <h3 id="modal-title">修改方法</h3>
-            <p id="modal-msg" style="margin: 1rem 0;">在<a href="https://github.com/CHEN-EXE/dagetoliet.github.io/" target="_blank" >此仓库</a>下的/restaurant/目录中的Foods.json。<br>需要您fork仓库修改后合并。</p>
-            <button onclick="arrowNo()" class="add-btn" style="width: 100%;">明白了</button>
-        </div>
-    </div>
-    
-    
-    <footer>
-        <p>Copyright 2026-11451 大哥国际餐馆 大哥国际厕所集团</p>
-        <p style="margin-top: 0.5rem; color: #95a5a6;">
-            <strong>本站点仅供你一乐，就算点菜了也送不过来<br>温馨提醒：本站有很多你看不懂的梗，这些梗不对外公开含义。</strong><br>
-         </p>
-    </footer>
+    </n-config-provider>
+</div>
 
-    <script>
-        let menuItems = [];
-        let cart = {};
-        const menuContainer = document.getElementById('menu-container');
-menuContainer.innerHTML="<div style='background-color:#d4af37;border-radius:10px;padding:10px;color:#fff'>加载菜单中...</div>";
+<script>
+    const { createApp, ref, computed, onMounted } = Vue;
 
-        fetch('foods.json')
-            .then(response => response.json())
-            .then(data => {
-                menuItems = data;
-                renderMenu();
-            })
-            .catch(error => menuContainer.innerHTML="<div style='background-color:#ff6363f3;border-radius:10px;padding:10px;color:#fff'>加载失败!<br>请检索Foods.json 语法是否正确。以下为错误报告：</div>"+error);
+    const app = createApp({
+        setup() {
+            const menuItems = ref([]);
+            const cart = ref({});
+            const loading = ref(false);
+            const showOrderModal = ref(false);
+            const showEditModal = ref(false);
 
-function loader(){
-  menuContainer.innerHTML="<div style='background-color:#d4af37;border-radius:10px;padding:10px;color:#fff'>加载菜单中...</div>";
-
-        fetch('Foods.json')
-            .then(response => response.json())
-            .then(data => {
-                menuItems = data;
-                renderMenu();
-            })
-            .catch(error => menuContainer.innerHTML="<div style='background-color:#ff6363f3;border-radius:10px;padding:10px;color:#fff'>加载失败!<br>请检索Foods.json 语法是否正确。以下为错误报告：</div>"+error);
-            
-}
-        function renderMenu() {
-            menuContainer.innerHTML = '';
-            menuItems.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'menu-item';
-                itemElement.innerHTML = `
-                    <div class="item-img">${item.icon}</div>
-                    <div class="item-details">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-desc">${item.desc}</div>
-                        <div class="item-footer">
-                            <span class="price">¥${item.price}</span>
-                            <button class="add-btn" onclick="addToCart(${item.id})">加入菜单</button>
-                        </div>
-                    </div>
-                `;
-                menuContainer.appendChild(itemElement);
-            });
-        }
-
-        function addToCart(id) {
-            const item = menuItems.find(i => i.id === id);
-            
-            if (cart[id]) {
-                cart[id].qty += 1;
-            } else {
-                cart[id] = {
-                    ...item,
-                    qty: 1
-                };
-            }
-            renderCart();
-        }
-
-        function renderCart() {
-            const cartList = document.getElementById('cart-list');
-            const emptyMsg = document.getElementById('cart-empty-msg');
-            const totalPriceEl = document.getElementById('total-price');
-            
-            cartList.innerHTML = '';
-            let total = 0;
-            let hasItems = false;
-
-            for (let id in cart) {
-                hasItems = true;
-                const item = cart[id];
-                const itemTotal = item.price * item.qty;
-                total += itemTotal;
-
-                const li = document.createElement('li');
-                li.className = 'cart-item';
-                li.innerHTML = `
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <span style="color: #7f8c8d; font-size: 0.9rem;">¥${item.price} x ${item.qty}</span>
-                    </div>
-                    <div class="cart-item-controls">
-                        <span style="font-weight: bold;">¥${itemTotal}</span>
-                        <button onclick="changeQty(${item.id}, -1)" style="margin-left: 10px;">-</button>
-                        <button onclick="changeQty(${item.id}, 1)">+</button>
-                    </div>
-                `;
-                cartList.appendChild(li);
-            }
-
-            if (hasItems) {
-                emptyMsg.style.display = 'none';
-            } else {
-                emptyMsg.style.display = 'block';
-            }
-
-            totalPriceEl.innerText = total;
-        }
-
-        function changeQty(id, change) {
-            if (cart[id]) {
-                cart[id].qty += change;
-                if (cart[id].qty <= 0) {
-                    delete cart[id];
+            // 主题定制
+            const themeOverrides = {
+                common: {
+                    primaryColor: '#d4af37',
+                    primaryColorHover: '#b8860b',
+                    primaryColorPressed: '#8a6609',
                 }
-                renderCart();
-            }
-        }
+            };
 
-        function checkout() {
-            const total = parseInt(document.getElementById('total-price').innerText);
-            if (total === 0) {
-                alert("大哥，请先点菜！");
-                return;
-            }
-            
-            document.getElementById('orderModal').style.display = 'flex';
+            const fetchMenu = async () => {
+                loading.value = true;
+                try {
+                    const response = await fetch('Foods.json');
+                    if (!response.ok) throw new Error('网络请求错误');
+                    menuItems.value = await response.json();
+                } catch (err) {
+                    window.$message?.error('加载失败: ' + err.message);
+                    // 模拟数据供测试
+                    menuItems.value = [
+                        {id:1, name:'测试菜品', price: 99, icon:'🍜', desc:'加载Foods.json失败后的占位符'}
+                    ];
+                } finally {
+                    loading.value = false;
+                }
+            };
+
+            const addToCart = (item) => {
+                if (cart.value[item.id]) {
+                    cart.value[item.id].qty++;
+                } else {
+                    cart.value[item.id] = { ...item, qty: 1 };
+                }
+            };
+
+            const changeQty = (id, delta) => {
+                if (cart.value[id]) {
+                    cart.value[id].qty += delta;
+                    if (cart.value[id].qty <= 0) delete cart.value[id];
+                }
+            };
+
+            const totalPrice = computed(() => {
+                return Object.values(cart.value).reduce((sum, item) => sum + (item.price * item.qty), 0);
+            });
+
+            const checkout = () => {
+                showOrderModal.value = true;
+            };
+
+            const clearCart = () => {
+                cart.value = {};
+            };
+
+            onMounted(fetchMenu);
+
+            return {
+                menuItems, cart, loading, showOrderModal, showEditModal,
+                themeOverrides, totalPrice,
+                fetchMenu, addToCart, changeQty, checkout, clearCart
+            };
         }
-        
-function arrow(){
-       document.getElementById('pass').style.display = 'flex';
-       
-}
-  
-function arrowNo(){
-       document.getElementById('pass').style.display ='none';
-       
-}
-            
-        function closeModal() {
-            document.getElementById('orderModal').style.display = 'none';
-            cart = {};
-            renderCart();
-        }
-    </script>
+    });
+
+    app.use(naive);
+    app.mount('#app');
+</script>
+
 </body>
 </html>
