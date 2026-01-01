@@ -186,7 +186,7 @@
             const fetchMenu = async () => {
                 loading.value = true;
                 try {
-                    const response = await fetch('Foods.json');
+                    const response = await fetch('foods.json');
                     if (!response.ok) throw new Error('网络请求错误');
                     menuItems.value = await response.json();
                 } catch (err) {
