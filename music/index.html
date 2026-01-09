@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全成唱片 - 新发现</title>
+    <style>
+        :root[data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-main: #000000;
+            --text-sub: #8a8a8e;
+            --border-color: #e5e5e5;
+            --player-bg: rgba(255, 255, 255, 0.85);
+            --card-shadow: rgba(0,0,0,0.1);
+            --full-player-bg: rgba(245, 245, 247, 0.95);
+        }
+        :root[data-theme="dark"] {
+            --bg-color: #000000;
+            --text-main: #ffffff;
+            --text-sub: #8e8e93;
+            --border-color: #2c2c2e;
+            --player-bg: rgba(28, 28, 30, 0.85);
+            --card-shadow: rgba(255,255,255,0.05);
+            --full-player-bg: rgba(10, 10, 10, 0.95);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0 20px 120px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* --- 导航与布局 --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px ;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .logo { font-size: 24px; font-weight: bold; color: #fa243c; }
+        .theme-btn { 
+            background: none; 
+            border:none;
+            color: #fa243c;
+            font-size:25px;
+            padding: 1px 9px; border-radius: 15px; cursor: pointer;
+        }
+
+        h1 { font-size: 34px; margin: 10px 0; }
+
+        .featured-banner {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 10px 20px var(--card-shadow);
+        }
+        .featured-banner img { 
+            width: 100%; display: block; 
+            transition: background 0.3s ease;
+        }
+
+        /* --- 歌曲列表 --- */
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-title::after { content: '|'; color: var(--text-sub); font-size: 18px; }
+
+        .song-list { display: flex; flex-direction: column; }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 0.5px solid var(--border-color);
+            cursor: pointer;
+        }
+        .song-item:active { background-color: var(--border-color); }
+
+        .song-cover {
+            width: 50px; height: 50px;
+            border-radius: 6px;
+            margin-right: 15px;
+            object-fit: cover;
+            background: #eee;
+        }
+        
+        .song-info { flex: 1; overflow: hidden; }
+        .song-name { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+        .song-artist { font-size: 14px; color: var(--text-sub); }
+        .more-btn { color: #fa243c; font-size: 20px; padding: 0 10px; }
+
+        /* --- 悬浮播放器 --- */
+        .floating-player {
+            position: fixed;
+            bottom: 20px; left: 15px; right: 15px;
+            height: 64px;
+            background: var(--player-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 12px;
+            display: flex; align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .floating-player:active { transform: scale(0.98); }
+
+        .mini-cover { width: 44px; height: 44px; border-radius: 4px; margin-right: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); object-fit: cover;}
+        .mini-info { flex: 1; font-size: 15px; font-weight: 500; }
+        .controls { display: flex; align-items: center; gap: 20px; }
+        .play-btn { font-size: 24px; cursor: pointer; color: var(--text-main); display: flex; align-items: center;}
+
+        /* --- 全屏播放器 --- */
+        #full-player {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--full-player-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            z-index: 2000;
+            display: flex; flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(100%); 
+            transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        #full-player.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .fp-header { display: flex; justify-content: space-between; align-items: center; height: 60px; }
+        .fp-close-btn { font-size: 30px; color: var(--text-sub); cursor: pointer; padding: 10px; }
+
+        .fp-vinyl-area { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; margin: 20px 0; }
+        
+        .vinyl-disc {
+            width: 75vw; height: 75vw;
+            max-width: 350px; max-height: 350px;
+            border-radius: 50%;
+            background: #111; 
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex; justify-content: center; align-items: center;
+            animation: rotate 20s linear infinite;
+            animation-play-state: paused; 
+        }
+        .vinyl-disc::before {
+            content: ''; position: absolute; inset: 0;
+            border-radius: 50%;
+            background: repeating-radial-gradient(#111 0, #111 2px, #222 3px, #222 4px);
+            z-index: 1;
+        }
+        .vinyl-cover {
+            width: 65%; height: 65%;
+            border-radius: 50%;
+            object-fit: cover;
+            z-index: 2;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .vinyl-disc.playing { animation-play-state: running; }
+
+        .fp-info-area { margin-bottom: 40px; padding: 0 20px; }
+        .fp-title { font-size: 28px; font-weight: bold; margin-bottom: 8px; color: var(--text-main); }
+        .fp-artist { font-size: 18px; color: #fa243c; } 
+        .fp-lyrics { 
+            margin-top: 10px; color: var(--text-sub); font-size: 16px; 
+            height: 24px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+        }
+
+        /* --- 进度条 --- */
+        .fp-progress-container {
+            width: 100%; height: 4px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 2px;
+            margin-bottom: 40px;
+            position: relative;
+            cursor: pointer; 
+            touch-action: none; 
+        }
+        .fp-progress-container::before {
+            content: ''; position: absolute;
+            top: -10px; bottom: -10px; left: 0; right: 0;
+            z-index: 10;
+        }
+        .fp-progress-bar {
+            width: 0%; height: 100%;
+            background: #fa243c;
+            border-radius: 2px;
+            position: relative;
+        }
+        .fp-progress-bar::after {
+            content: ''; position: absolute;
+            right: -6px; top: -4px;
+            width: 12px; height: 12px;
+            background: #fa243c;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .time-labels {
+            display: flex; justify-content: space-between;
+            font-size: 12px; color: var(--text-sub); margin-top: 8px;
+        }
+
+        .fp-controls { display: flex; justify-content: space-around; align-items: center; margin-bottom: 40px; }
+        .fp-btn { font-size: 28px; color: var(--text-main); cursor: pointer; }
+        .fp-play-btn {
+            width: 70px; height: 70px;
+            background: #fa243c;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 32px;
+            box-shadow: 0 8px 20px rgba(250, 36, 60, 0.4);
+        }
+        .fp-btn:active, .fp-play-btn:active { transform: scale(0.9); }
+
+        #main-audio { display: none; }
+
+        /* --- 新增：Toast 提示框样式 (仿截图) --- */
+        #toast-box {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(40, 40, 40, 0.9); /* 深色背景 */
+            color: white;
+            padding: 25px 30px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            z-index: 3000;
+            min-width: 120px;
+            
+            /* 动画核心 */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        #toast-box.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .toast-icon { font-size: 32px; margin-bottom: 5px; }
+        .toast-text { font-size: 16px; font-weight: 500; }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">全成唱片</div>
+    <button class="theme-btn" onclick="toggleTheme()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m3.975 19.8l-.85-.35q-.775-.325-1.037-1.125t.087-1.575l1.8-3.9zm4 2.2q-.825 0-1.412-.587T5.975 20v-6l2.65 7.35q.075.175.15.338t.2.312zm5.15-.1q-.8.3-1.55-.075t-1.05-1.175l-4.45-12.2q-.3-.8.05-1.562t1.15-1.038l7.55-2.75q.8-.3 1.55.075t1.05 1.175l4.45 12.2q.3.8-.05 1.563t-1.15 1.037zM10.975 10q.425 0 .713-.288T11.975 9t-.287-.712T10.975 8t-.712.288T9.975 9t.288.713t.712.287"/></svg>
+    </button>
+</header>
+
+<h1>新的</h1>
+
+<div class="featured-banner">
+    <img id="dagepic" src="./img/p1.png" alt="大哥全成唱片" id="banner-img" onerror="this.src='https://via.placeholder.com/600x200?text=Banner'">
+</div>
+
+<div class="section-title">最歌曲</div>
+
+<div class="song-list" id="song-container">
+    </div>
+    
+<div class="section-title">友连接</div>
+
+<div class="song-list">
+  <a href="././" class="song-item" style="text-decoration:none; color:inherit; padding-left:10px;">大哥国际厕所</a>
+  <a href="././media/" class="song-item" style="text-decoration:none; color:inherit; padding-left:10px;">大哥国际传媒平台</a> 
+  <a href="././hotel/" class="song-item" style="text-decoration:none; color:inherit; padding-left:10px;">大哥国际酒店</a>
+</div>
+
+<div class="floating-player" id="player-bar" style="display: none;" onclick="openFullPlayer()">
+    <img class="mini-cover" id="p-cover" src="">
+    <div class="mini-info" id="p-title">未在播放</div>
+    <div class="controls">
+        <div class="play-btn" id="mini-play-btn" onclick="togglePlay(event)">
+         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4v16a1 1 0 0 0 1.524.852l13-8a1 1 0 0 0 0-1.704l-13-8A1 1 0 0 0 6 4"/></svg> 
+        </div>
+        <div class="play-btn" onclick="nextSong(event)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M17.5 9.402c2 1.155 2 4.041 0 5.196l-9 5.196c-2 1.155-4.5-.288-4.5-2.598V6.804c0-2.31 2.5-3.753 4.5-2.598zM21 5a1 1 0 1 0-2 0v14a1 1 0 1 0 2 0z" clip-rule="evenodd"/></svg>
+        </div>
+    </div>
+</div>
+
+<div id="full-player">
+    <div class="fp-header">
+        <div class="fp-close-btn" onclick="closeFullPlayer()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6l1.41-1.41z"/></svg>
+        </div>
+        <div style="font-size: 14px; color: var(--text-sub);"></div>
+        <div style="width: 30px;"></div> 
+    </div>
+
+    <div class="fp-vinyl-area">
+        <div class="vinyl-disc" id="fp-disc">
+            <img class="vinyl-cover" id="fp-cover" src="" onerror="this.src='https://via.placeholder.com/300'">
+        </div>
+    </div>
+
+    <div class="fp-info-area">
+        <div class="fp-title" id="fp-title">歌曲标题</div>
+        <div class="fp-artist" id="fp-artist">歌手名</div>
+        <div class="fp-lyrics">无歌词</div>
+    </div>
+
+    <div class="fp-progress-container" id="progress-container">
+        <div class="fp-progress-bar" id="progress-bar"></div>
+        <div class="time-labels">
+            <span id="current-time">00:00</span>
+            <span id="total-duration">00:00</span>
+        </div>
+    </div>
+    
+    <div class="fp-controls">
+         <div class="fp-play-btn" id="fp-play-trigger" onclick="togglePlay(event)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4v16a1 1 0 0 0 1.524.852l13-8a1 1 0 0 0 0-1.704l-13-8A1 1 0 0 0 6 4"/></svg>
+        </div>
+    </div>
+</div>
+
+<audio id="main-audio"></audio>
+
+<div id="toast-box">
+    <div class="toast-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c5.53 0 10 4.47 10 10s-4.47 10-10 10S2 17.53 2 12S6.47 2 12 2m0 19c4.97 0 9-4.03 9-9s-4.03-9-9-9s-9 4.03-9 9s4.03 9 9 9m-1-5h2v2h-2zm0-8h2v6h-2z"/></svg>
+    </div>
+    <div class="toast-text">播放失败</div>
+</div>
+
+<p id="consoles" style="font-size:14px;color:#46464668; text-align:center; margin-top:50px;">Copyright 2026666<br>本站仅供娱乐 音频来源自用户手动提交 如侵权请联络仓库管理者删除</p>
+
+<script>
+    const audio = document.getElementById('main-audio');
+    const miniPlayBtn = document.getElementById('mini-play-btn');
+    const fullPlayBtn = document.getElementById('fp-play-trigger');
+    const fullPlayer = document.getElementById('full-player');
+    const vinylDisc = document.getElementById('fp-disc');
+    const toastBox = document.getElementById('toast-box'); 
+    
+       // --- Toast 核心
+    let toastTimer;
+    function showToast(message) {
+        // 清除上一次可能的定时器
+        if (toastTimer) clearTimeout(toastTimer);
+        
+        // 动态toast
+        document.querySelector('.toast-text').innerText = message || "操作失败";
+
+        toastBox.classList.add('show');
+        
+        // 3秒后 Fade Out
+        toastTimer = setTimeout(() => {
+            toastBox.classList.remove('show');
+        }, 3000);
+    }
+    
+function sc(){
+    showToast("调试模式已激活"); // 触发弹窗
+     document.getElementById("consoles").innerHTML=`DageConsoleV1<br><button>重新加载节点VA</button>
+     <button onclick="post()">整数据输出</button>`;
+}
+function post(){
+  console.log("Pwd:dagenb\nU2FsdGVkX19sHuCf2r7fzkV2h2qH/h1i6wziNDFpioNz3E2h3dZj5ksHN38qdLFcxStnD7pFv13YiDZ6oDiUtw==")
+  showToast("Pwd:dagenb\nAES PWD");
+}
+
+    // 图标常量
+    const ICON_PLAY = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4v16a1 1 0 0 0 1.524.852l13-8a1 1 0 0 0 0-1.704l-13-8A1 1 0 0 0 6 4"/></svg>`;
+    const ICON_PAUSE = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M9 4H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m8 0h-2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/></svg>`;
+
+    // --- 数据加载 ---
+    async function init() {
+        try {
+            const res = await fetch('mus.json');
+            const data = await res.json();
+            render(data);
+        } catch (e) { 
+            console.error("加载列表失败");
+            // 模拟错误状态
+            document.getElementById('song-container').innerHTML="<div style='text-align:center; color:#999; padding:20px;'>列表加载失败</div>";
+       showToast("出错了"); // 触发弹窗
+          
+        }
+    }
+
+    // --- 渲染列表 ---
+    function render(songs) {
+        const container = document.getElementById('song-container');
+        container.innerHTML = songs.map((s, i) => `
+            <div class="song-item" onclick="selectSong(${JSON.stringify(s).replace(/"/g, '&quot;')})">
+                <img class="song-cover" src="${s.cover}" onerror="this.src='https://via.placeholder.com/50'">
+                <div class="song-info">
+                    <div class="song-name">${s.title}</div>
+                    <div class="song-artist">${s.artist}</div>
+                </div>
+                <div class="more-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="#ea580c" d="M16.5 8c0 1.5-.5 3.5-2.9 4.3c.7-1.7.8-3.4.3-5c-.7-2.1-3-3.7-4.6-4.6c-.4-.3-1.1.1-1 .7c0 1.1-.3 2.7-2 4.4C4.1 10 3 12.3 3 14.5C3 17.4 5 21 9 21c-4-4-1-7.5-1-7.5c.8 5.9 5 7.5 7 7.5c1.7 0 5-1.2 5-6.4c0-3.1-1.3-5.5-2.4-6.9c-.3-.5-1-.2-1.1.3"/></svg></div>
+            </div>
+        `).join('');
+    }
+
+ 
+    // --- 播放核心逻辑 ---
+    function selectSong(song) {
+        document.getElementById('player-bar').style.display = 'flex';
+        document.getElementById('p-cover').src = song.cover;
+        document.getElementById('p-title').innerText = song.title;
+
+        document.getElementById('fp-cover').src = song.cover;
+        document.getElementById('fp-title').innerText = song.title;
+        document.getElementById('fp-artist').innerText = song.artist;
+        
+        audio.src = song.url;
+        
+        // 尝试播放，如果失败则弹出 Toast
+        audio.play()
+            .then(() => {
+                updatePlayState(true);
+            })
+            .catch(e => {
+                console.log("播放失败", e);
+                updatePlayState(false);
+                showToast("音乐播放失败"); // 触发弹窗
+            });
+    }
+
+    // 播放/暂停切换
+    function togglePlay(event) {
+        if(event) event.stopPropagation();
+
+        if (audio.paused) {
+            audio.play()
+                .then(() => updatePlayState(true))
+                .catch(e => {
+                    console.log("Play error");
+                    showToast("音乐播放失败");
+                });
+        } else {
+            audio.pause();
+            updatePlayState(false);
+        }
+    }
+
+    function updatePlayState(isPlaying) {
+        if (isPlaying) {
+            miniPlayBtn.innerHTML = ICON_PAUSE;
+            fullPlayBtn.innerHTML = ICON_PAUSE;
+            vinylDisc.classList.add('playing');
+        } else {
+            miniPlayBtn.innerHTML = ICON_PLAY;
+            fullPlayBtn.innerHTML = ICON_PLAY;
+            vinylDisc.classList.remove('playing');
+        }
+    }
+
+    // --- 全屏控制 ---
+    function openFullPlayer() { fullPlayer.classList.add('active'); }
+    function closeFullPlayer() { fullPlayer.classList.remove('active'); }
+
+    // --- 主题切换 ---
+    function toggleTheme() {
+        const html = document.documentElement;
+        const theme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        const img = document.getElementById("dagepic");
+        
+        if (theme === 'dark') img.src = "./img/p.jpg";
+        else img.src = "./img/p1.png";
+       
+        html.setAttribute('data-theme', theme);
+    }
+
+    init();
+    
+    // --- 进度条功能 ---
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const currTimeEl = document.getElementById('current-time');
+    const durTimeEl = document.getElementById('total-duration');
+    let isDragging = false; 
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('loadedmetadata', () => {
+        durTimeEl.innerText = formatTime(audio.duration);
+    });
+
+    // 拖拽相关监听
+    progressContainer.addEventListener('click', setProgress);
+    progressContainer.addEventListener('mousedown', (e) => { isDragging = true; setProgress(e); });
+    document.addEventListener('mousemove', (e) => { if (isDragging) setProgress(e); });
+    document.addEventListener('mouseup', () => { isDragging = false; });
+
+    // 触摸相关监听
+    progressContainer.addEventListener('touchstart', (e) => { isDragging = true; setTouchProgress(e); }, {passive: false});
+    document.addEventListener('touchmove', (e) => { 
+        if (isDragging) { e.preventDefault(); setTouchProgress(e); }
+    }, {passive: false});
+    document.addEventListener('touchend', () => { isDragging = false; });
+
+    // 更新进度条 UI
+    function updateProgress(e) {
+        if (isDragging) return; 
+        const { duration, currentTime } = e.srcElement;
+        if (isNaN(duration)) return;
+        const percent = (currentTime / duration) * 100;
+        progressBar.style.width = `${percent}%`;
+        currTimeEl.innerText = formatTime(currentTime);
+        if(audio.duration) durTimeEl.innerText = formatTime(audio.duration);
+    }
+
+    // 鼠标点击/拖动逻辑
+    function setProgress(e) {
+        const width = progressContainer.clientWidth;
+        const rect = progressContainer.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const duration = audio.duration;
+        if (isNaN(duration)) return;
+        audio.currentTime = (clickX / width) * duration;
+        progressBar.style.width = `${(clickX / width) * 100}%`;
+    }
+
+    // 触摸逻辑
+    function setTouchProgress(e) {
+        const width = progressContainer.clientWidth;
+        const rect = progressContainer.getBoundingClientRect();
+        const touchX = e.touches[0].clientX - rect.left;
+        const duration = audio.duration;
+        if (isNaN(duration)) return;
+        
+        let newTime = (touchX / width) * duration;
+        // 边界限制
+        if (newTime < 0) newTime = 0;
+        if (newTime > duration) newTime = duration;
+
+        audio.currentTime = newTime;
+        progressBar.style.width = `${(newTime / duration) * 100}%`;
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "00:00";
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return `${min < 10 ? '0' + min : min}:${sec < 10 ? '0' + sec : sec}`;
+    }
+</script>
+</body>
+</html>
