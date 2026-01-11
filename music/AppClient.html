@@ -203,7 +203,9 @@
             width: 100%; height: 5px; background: rgba(128,128,128,0.2); border-radius: 3px;
             margin-bottom: 40px; position: relative; cursor: pointer; 
         }
-        .fp-progress-bar { width: 0%; height: 100%; background: #fa243c; border-radius: 3px; position: relative; }
+        .fp-progress-bar { width: 0%; height: 100%; 
+           background: linear-gradient(to right, #ff7e5f, #feb47b);/* 红色背景 */
+         border-radius: 3px; position: relative; }
         .time-labels {
             display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sub); margin-top: 10px; font-weight: 500;
         }
@@ -213,7 +215,7 @@
         /* 全屏播放按钮 - 红色 */
         .fp-play-btn {
             width: 70px; height: 70px;
-            background: #fa243c; /* 红色背景 */
+            background: linear-gradient(to right, #ff7e5f, #feb47b);/* 红色背景 */
             color: #ffffff; /* 白色图标 */
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
             font-size: 32px; box-shadow: 0 8px 20px rgba(250, 36, 60, 0.4);
