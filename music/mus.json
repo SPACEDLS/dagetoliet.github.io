@@ -1,9 +1,16 @@
 [
   {
-    "title": "大哥东",
-    "artist": "大哥",
+    "title": "大哥大道",
+    "artist": "NaOH 制作.",
     "cover": "./img/dagem1.jpg",
-    "url": "占位的，可以改"
+    "url": "./src/o1.mp3"
+  },
+   {
+    "title": "NO BATIDÃO(Feat.dage)",
+    "artist": "DJ.SPACE.",
+    "cover": "./img/NO BATIDÃO.jpg",
+    "url": "./src/NO BATIDÃO - DJ.SPACE.mp3"
   }
+ 
  
 ]
