@@ -52,20 +52,24 @@
         }
         
         /* 修改 Logo 布局以支持左侧按钮 */
-        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-left { display: flex; align-items: center; gap: 10px;}
         .logo { font-size: 22px; font-weight: 700; color: #fa243c; display: flex; align-items: center; gap:5px; transition: transform 0.3s ease;}
         .logo svg { font-size: 24px; }
         
         /* 返回按钮样式 */
         #header-back-btn {
             font-size: 24px; color: #fa243c; border: none; background: none; padding: 0;
+            margin-bottom:-5px;
             cursor: pointer; opacity: 0; visibility: hidden; transform: translateX(10px);
             transition: all 0.3s ease; display: none; /* 默认不显示 */
         }
         #header-back-btn.show { opacity: 1; visibility: visible; transform: translateX(0); display: block; }
 
         .header-controls { display: flex; align-items: center; gap: 15px; }
-        
+        .icon-btn:hover{
+          background: var(--search-bg);
+            border: none; border-radius: 10px;
+        }
         .icon-btn { 
             background: none; border: none; color: #fa243c; font-size: 24px;
             padding: 5px; cursor: pointer; border-radius: 50%;
@@ -73,6 +77,11 @@
         }
         
         /* 用户区域组合 */
+        .user-area:hover{
+                 background: var(--search-bg);
+            border: none; border-radius: 10px;
+     
+        }
         .user-area {
             display: flex; align-items: center; gap: 8px; cursor: pointer;
         }
@@ -128,7 +137,8 @@
         .song-info { flex: 1; overflow: hidden; }
         .song-name { font-size: 16px; font-weight: 500; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .song-artist { font-size: 14px; color: var(--text-sub); }
-        .more-btn { color: #fa243c; font-size: 20px; padding: 0 10px; }
+        .more-btn { 
+          font-size: 20px; padding: 0 10px; }
 
         /* --- 搜索界面样式 (iOS Style) --- */
         #search-view h1 { margin-bottom: 15px; }
@@ -195,7 +205,7 @@
 
         .fp-info-area { margin-bottom: 30px; padding: 0 10px; text-align: left; }
         .fp-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
-        .fp-artist { font-size: 18px; color: #fa243c; font-weight: 500; } 
+        .fp-artist { font-size: 18px; color:  #5d5d5d92; font-weight: 500; } 
         .fp-lyrics { margin-top: 8px; color: var(--text-sub); font-size: 14px; height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
         /* --- 进度条 --- */
@@ -204,23 +214,31 @@
             margin-bottom: 40px; position: relative; cursor: pointer; 
         }
         .fp-progress-bar { width: 0%; height: 100%; 
-           background: linear-gradient(to right, #ff7e5f, #feb47b);/* 红色背景 */
-         border-radius: 3px; position: relative; }
+            background: linear-gradient(to right, #ff7e5f, #feb47b);/* 红色背景 */
+          border-radius: 3px; position: relative; }
         .time-labels {
             display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sub); margin-top: 10px; font-weight: 500;
         }
 
-        .fp-controls { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; gap: 40px; }
+        .fp-controls { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; gap: 30px; }
         
         /* 全屏播放按钮 - 红色 */
         .fp-play-btn {
-            width: 70px; height: 70px;
+            width: 70px; height: 50px;
             background: linear-gradient(to right, #ff7e5f, #feb47b);/* 红色背景 */
             color: #ffffff; /* 白色图标 */
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            border-radius: 90px; display: flex; justify-content: center; align-items: center;
             font-size: 32px; box-shadow: 0 8px 20px rgba(250, 36, 60, 0.4);
         }
         .fp-play-btn:active { transform: scale(0.9); opacity: 0.9; }
+
+        /* 新增：侧边控制按钮样式 (循环/倍速) */
+        .control-btn-side {
+            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+            color: var(--text-sub); font-size: 22px; cursor: pointer; transition: color 0.2s;
+        }
+        .control-btn-side.active { color: #fa243c; } /* 激活态 */
+        .speed-text { font-size: 15px; font-weight: 700; width: 46px; border: 1px solid currentColor; border-radius: 4px; height: 24px; }
 
         #main-audio { display: none; }
 
@@ -234,7 +252,7 @@
         
         .ios-dialog-box {
             width: 270px; background: var(--dialog-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px; text-align: center; transform: scale(1.1);
+            border-radius: 20px; text-align: center; transform: scale(1.1);
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
@@ -245,7 +263,7 @@
         .ios-dialog-input-wrapper { padding: 0 16px 16px; }
         .ios-dialog-input {
             width: 100%; box-sizing: border-box; padding: 8px; border: 0.5px solid var(--border-color);
-            border-radius: 30px; font-size: 14px; background: var(--input-bg); color: var(--text-main); outline: none;
+            border-radius: 10px; font-size: 14px; background: var(--input-bg); color: var(--text-main); outline: none;
         }
         .ios-dialog-btns {
             border-top: 0.5px solid var(--text-sub); border-top-color: rgba(128,128,128,0.3); display: flex;
@@ -343,7 +361,7 @@
     <div class="fp-info-area">
         <div class="fp-title" id="fp-title">歌曲标题</div>
         <div class="fp-artist" id="fp-artist">歌手名</div>
-        <div class="fp-lyrics">无歌词</div>
+        <div class="fp-lyrics">暂无歌词~</div>
     </div>
 
     <div class="fp-progress-container" id="progress-container">
@@ -355,9 +373,15 @@
     </div>
     
     <div class="fp-controls">
+        <div class="control-btn-side" id="loop-btn" onclick="toggleLoopMode()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M17 17H7v-3l-4 4l4 4v-3h12v-6h-2M7 7h10v3l4-4l-4-4v3H5v6h2z"/></svg>
+        </div>
+
          <div class="fp-play-btn" id="fp-play-trigger" onclick="togglePlay(event)">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4v16a1 1 0 0 0 1.524.852l13-8a1 1 0 0 0 0-1.704l-13-8A1 1 0 0 0 6 4"/></svg>
         </div>
+
+        <div class="control-btn-side speed-text" id="speed-btn" onclick="changeSpeed()">1.0x</div>
     </div>
 </div>
 
@@ -398,6 +422,13 @@
     const searchView = document.getElementById('search-view');
     const backBtn = document.getElementById('header-back-btn');
     
+    // 新增：倍速与循环
+    const speedBtn = document.getElementById('speed-btn');
+    const loopBtn = document.getElementById('loop-btn');
+    let loopMode = 0; // 0: 顺序(默认), 1: 单曲
+    const speeds = [1.0, 1.25, 1.5, 2.0];
+    let speedIndex = 0;
+
     // 全局数据存储
     let allSongs = [];
 
@@ -450,7 +481,7 @@
                     <div class="song-name">${s.title}</div>
                     <div class="song-artist">${s.artist}</div>
                 </div>
-                <div class="more-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M16 12a2 2 0 1 1-4 0a2 2 0 0 1 4 0m-6 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0m12 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"/></svg></div>
+                <div class="more-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M19.345 5.993c.278-.103.61-.19.97-.125c.442.08.836.329 1.1.692c.215.296.28.634.308.93c.027.287.027.646.027 1.055v.11c0 .3.002.62-.106.915a1.75 1.75 0 0 1-.392.623c-.22.225-.509.363-.78.492l-.068.033l-1.785.857c-.369.177-.692.332-.964.432c-.261.097-.57.18-.905.136v4.286c0 1.814-1.435 3.321-3.25 3.321s-3.25-1.507-3.25-3.321s1.435-3.322 3.25-3.322a3.2 3.2 0 0 1 1.75.522V10h.003q-.004-.254-.003-.545v-.11c0-.3-.002-.62.106-.915a1.75 1.75 0 0 1 .392-.623c.22-.225.509-.363.78-.492l.068-.033l1.785-.857c.369-.177.692-.332.964-.432"/><path fill="currentColor" fill-rule="evenodd" d="M2.25 5A.75.75 0 0 1 3 4.25h12a.75.75 0 0 1 0 1.5H3A.75.75 0 0 1 2.25 5m0 4A.75.75 0 0 1 3 8.25h10a.75.75 0 0 1 0 1.5H3A.75.75 0 0 1 2.25 9m0 4a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1-.75-.75m0 4a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg></div>
             </div>
         `).join('');
     }
@@ -522,6 +553,7 @@
         document.getElementById('fp-artist').innerText = song.artist;
         
         audio.src = song.url;
+        audio.playbackRate = speeds[speedIndex]; // 保持倍速
         audio.play().then(() => updatePlayState(true))
             .catch(e => { console.log("Fail", e); updatePlayState(false); showToast("音乐播放失败"); });
     }
@@ -555,6 +587,29 @@
         html.setAttribute('data-theme', theme);
     }
     
+    // --- New Features Logic ---
+    function toggleLoopMode() {
+        loopMode = loopMode === 0 ? 1 : 0;
+        audio.loop = (loopMode === 1);
+        if(loopMode === 1) {
+            loopBtn.classList.add('active');
+            loopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 7h10v3l4-4l-4-4v3H5v6h2V7m10 10H7v-3l-4 4l4 4v-3h12v-6h-2v4m-4-2V9h-1l-2 1v1h1.5v4H13z"/></svg>`; // 单曲
+            showToast("单曲循环");
+        } else {
+            loopBtn.classList.remove('active');
+            loopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M17 17H7v-3l-4 4l4 4v-3h12v-6h-2M7 7h10v3l4-4l-4-4v3H5v6h2z"/></svg>`; // 顺序
+            showToast("顺序播放");
+        }
+    }
+
+    function changeSpeed() {
+        speedIndex = (speedIndex + 1) % speeds.length;
+        const s = speeds[speedIndex];
+        audio.playbackRate = s;
+        speedBtn.innerText = s + "x";
+        showToast("倍速: " + s);
+    }
+
     // --- Dialog Logic Updated ---
     function openUserDialog() {
         document.getElementById('user-dialog-overlay').classList.add('active');
