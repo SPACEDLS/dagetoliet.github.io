@@ -426,8 +426,8 @@
     const speedBtn = document.getElementById('speed-btn');
     const loopBtn = document.getElementById('loop-btn');
     let loopMode = 0; // 0: 顺序(默认), 1: 单曲
-    const speeds = [1.0, 1.25, 1.5, 2.0];
-    let speedIndex = 0;
+    const speeds = [0.1,0.5,0.8,1.0, 1.25, 1.5, 2.0];
+    let speedIndex = 3;
 
     // 全局数据存储
     let allSongs = [];
@@ -476,7 +476,7 @@
         }
         container.innerHTML = songs.map((s, i) => `
             <div class="song-item" onclick="selectSong(${JSON.stringify(s).replace(/"/g, '&quot;')})">
-                <img class="song-cover" src="${s.cover}" onerror="this.src='https://via.placeholder.com/50'">
+                <img class="song-cover" src="${s.cover}" onerror='showToast("加载封面中断，请重新打开软件等待图片加载完成，以免播放出错")'>
                 <div class="song-info">
                     <div class="song-name">${s.title}</div>
                     <div class="song-artist">${s.artist}</div>
